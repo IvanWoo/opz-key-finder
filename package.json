@@ -1,0 +1,35 @@
+{
+    "name": "key-finder",
+    "version": "1.0.0",
+    "description": "",
+    "repository": "https://github.com/IvanWoo/key-finder",
+    "author": "Yifan Wu",
+    "license": "MIT",
+    "scripts": {
+        "clean": "rimraf .cache build out dist",
+        "prep": "yarn clean && mkdir -p out",
+        "build": "yarn prep && parcel build index.html -d out --no-source-maps --no-cache --experimental-scope-hoisting --detailed-report --public-url ./",
+        "start": "yarn prep && parcel index.html -p 8080 --open -d out"
+    },
+    "dependencies": {
+        "@tonaljs/modules": "^3.4.5"
+    },
+    "devDependencies": {
+        "autoprefixer": "^9.5.1",
+        "concurrently": "^4.1.0",
+        "cross-env": "^5.2.0",
+        "cssnano": "^4.1.10",
+        "parcel-bundler": "^1.12.4",
+        "postcss-cli": "^6.1.2",
+        "rimraf": "^2.6.3",
+        "tailwindcss": "^1.0",
+        "terser": "^4.4.0",
+        "typescript": "^3.7.2"
+    },
+    "browserslist": [
+        "last 3 Chrome versions"
+    ],
+    "browser": {
+        "process": false
+    }
+}
