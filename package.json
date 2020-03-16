@@ -12,6 +12,8 @@
         "start": "yarn prep && parcel index.html -p 8080 --open -d out"
     },
     "dependencies": {
+        "@thi.ng/associative": "^3.1.8",
+        "@thi.ng/transducers": "^6.4.1",
         "@tonaljs/modules": "^3.4.5"
     },
     "devDependencies": {
