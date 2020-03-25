@@ -18,17 +18,22 @@ import { clickToggleDot, ToggleDotOpts } from "./components";
 
 const keys = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
-const normalize_midi = map((y) => toMidi(y + "2") % 12);
-
 let scales = transduce(
     comp(
         map((x) => majorKey(x)),
         multiplexObj({
             raw: map((x) => x),
-            music_key: map((x) => `${x.tonic} ${x.type}`),
+            tonic_midi: map((x) => toMidi(x.tonic + "2") % 12),
+            music_key: map((x) => `${x.tonic} ${x.type.slice(0, 3)}`),
             normalized_midi: comp(
                 map((x) => x.scale),
-                map((x) => transduce(normalize_midi, push(), x))
+                map((x) =>
+                    transduce(
+                        map((y) => toMidi(y + "2") % 12),
+                        push(),
+                        x
+                    )
+                )
                 // map((x) => x.sort((y, z) => y - z))
             )
         })
@@ -49,51 +54,67 @@ const state = transduce(
 
 const toggleState = (i: number) => (state[i] = !state[i]);
 
-const dotOpts: Partial<ToggleDotOpts> = {
-    r: 16,
-    pad: 2,
-    margin: 2
-    // glyph: "C"
+const wDotOpts: Partial<ToggleDotOpts> = {
+    r: 16
+    // pad: 2
+    // margin: 2
 };
 
-const toggleZ = clickToggleDot({ ...dotOpts });
+const cDotOpts: Partial<ToggleDotOpts> = {
+    ...wDotOpts,
+    glyph: "C"
+};
 
-const toggleGroup = (_: any, toggle: any) => [
-    "div.mb3",
+const bDotOpts: Partial<ToggleDotOpts> = {
+    ...wDotOpts,
+    bgOn: { fill: "#000" },
+    bgOff: { fill: "#000" },
+    floor: 2
+};
+
+const wToggle = clickToggleDot({ ...wDotOpts });
+const cToggle = clickToggleDot({ ...cDotOpts });
+const bToggle = clickToggleDot({ ...bDotOpts });
+
+const toggleGroup = () => [
+    "div.mb5",
     ...state.map((x, i) => [
-        "div.dib",
+        i === 4 ? "div.dib.mr4" : "div.dib",
         [
-            toggle,
+            i === 0
+                ? cToggle
+                : new Set([2, 4, 5, 7, 9, 11]).has(i)
+                ? wToggle
+                : bToggle,
             {
-                class: "pointer mr1",
+                class: "pointer mr0",
                 onclick: () => toggleState(i)
             },
             x
-        ],
-        ["div.tc", i]
+        ]
+        // ["div.tc", i]
     ])
 ];
 
 const keyGroup = (comparisons) => {
-    const max_size = comparisons[0].common_midis_size;
+    // const max_size = comparisons[0].common_midis_size;
     return () => [
         "div",
         ...comparisons.map((x, i) => [
-            "div",
+            "div.mv2.mr2",
             [
                 "div.dib",
                 [
                     "svg",
-                    { width: "100", height: "1" },
+                    { width: 110, height: 10 },
                     x.common_midis_size
                         ? [
-                              "line",
+                              "rect",
                               {
-                                  x1: 0,
-                                  y1: 0.5,
-                                  x2: (x.common_midis_size / max_size) * 100,
-                                  y2: 0.5,
-                                  stroke: "black"
+                                  width: x.similarity * 100,
+                                  height: 10,
+                                  rx: 5,
+                                  fill: "grey"
                               }
                           ]
                         : []
@@ -110,34 +131,36 @@ const cancel = start(() => {
         push(),
         range(12)
     );
+    inputs_midi = new Set(inputs_midi);
     let comparisons = transduce(
         comp(
             multiplexObj({
                 music_key: map((x) => x.music_key),
+                tonic_midi: map((x) => x.tonic_midi),
                 common_midis: map((x) =>
-                    intersection(
-                        new Set(x.normalized_midi),
-                        new Set(inputs_midi)
-                    )
+                    intersection(new Set(x.normalized_midi), inputs_midi)
                 )
             }),
             multiplexObj({
                 music_key: map((x) => x.music_key),
                 common_midis: map((x) => x.common_midis),
-                common_midis_size: map((x) => x.common_midis.size)
+                common_midis_size: map((x) => x.common_midis.size),
+                similarity: map((x) =>
+                    inputs_midi.has(x.tonic_midi)
+                        ? x.common_midis.size / inputs_midi.size + 0.1
+                        : x.common_midis.size / inputs_midi.size
+                )
             })
             // filter((x) => x.common_midis_size > inputs.length / 2)
         ),
         push(),
         scales
     );
-    comparisons = comparisons.sort(
-        (a, b) => b.common_midis_size - a.common_midis_size
-    );
+    comparisons = comparisons.sort((a, b) => b.similarity - a.similarity);
     return [
         "div",
-        [h2, "Let's get it"],
-        ["div", [toggleGroup, toggleZ], keyGroup(comparisons)]
+        [h2, "KEY FINDER"],
+        ["div", toggleGroup, keyGroup(comparisons)]
     ];
 });
 

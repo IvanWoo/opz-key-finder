@@ -6,6 +6,7 @@ export interface ToggleOpts {
     bgOff: object;
     fgOn: object;
     fgOff: object;
+    floor: number;
     glyph?: string;
 }
 
@@ -17,10 +18,11 @@ const DEFAULT_OPTS: ToggleOpts = {
     anim: 100,
     pad: 1,
     margin: 0,
-    bgOn: { fill: "#000" },
-    bgOff: { fill: "#999" },
+    bgOn: { fill: "#CCCCCC" },
+    bgOff: { fill: "#CCCCCC" },
     fgOn: { fill: "#E83015" },
-    fgOff: { fill: "#fff" }
+    fgOff: { fill: "#fff" },
+    floor: 1
 };
 
 export const clickToggleDot = (opts: Partial<ToggleDotOpts> = {}) => {
@@ -29,7 +31,7 @@ export const clickToggleDot = (opts: Partial<ToggleDotOpts> = {}) => {
         ...DEFAULT_OPTS,
         ...opts
     };
-    const { r, pad, margin, glyph } = _opts;
+    const { r, pad, margin, glyph, floor } = _opts;
     const ratio = 0.5;
     const ir = r * ratio ** 2;
     const m2 = margin * 2;
@@ -37,7 +39,7 @@ export const clickToggleDot = (opts: Partial<ToggleDotOpts> = {}) => {
     const cx = br + margin;
     const height = br * 2;
     const totalH = height + m2;
-    const svgSize = { width: totalH, height: totalH };
+    const svgSize = { width: totalH, height: totalH * floor };
     const style = { transition: `all ${_opts.anim}ms ease-out` };
     const center = { cx, cy: cx };
 
