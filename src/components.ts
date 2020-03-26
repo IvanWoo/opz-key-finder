@@ -2,6 +2,7 @@ export interface ToggleOpts {
     anim: number;
     pad: number;
     margin: number;
+    hlOn: object;
     bgOn: object;
     bgOff: object;
     fgOn: object;
@@ -14,16 +15,24 @@ export interface ToggleDotOpts extends ToggleOpts {
     r: number;
 }
 
+// TODO: better color palette
 const DEFAULT_OPTS: ToggleOpts = {
     anim: 100,
     pad: 1,
     margin: 0,
+    hlOn: { fill: "#90B44B" },
     bgOn: { fill: "#CCCCCC" },
     bgOff: { fill: "#CCCCCC" },
     fgOn: { fill: "#E83015" },
     fgOff: { fill: "#fff" },
     floor: 1
 };
+
+const blur = [
+    "filter",
+    { id: "blur" },
+    ["feGaussianBlur", { in: "SourceGraphic", stdDeviation: ".25" }]
+];
 
 export const clickToggleDot = (opts: Partial<ToggleDotOpts> = {}) => {
     const _opts: ToggleDotOpts = {
@@ -42,7 +51,13 @@ export const clickToggleDot = (opts: Partial<ToggleDotOpts> = {}) => {
     const svgSize = { width: totalH, height: totalH * floor };
     const style = { transition: `all ${_opts.anim}ms ease-out` };
     const center = { cx, cy: cx };
+    const filter = "url(#blur)";
 
+    const hlOn: any = {
+        ..._opts.hlOn,
+        ...center,
+        r: br
+    };
     const bgOn: any = {
         ..._opts.bgOn,
         ...center,
@@ -68,11 +83,13 @@ export const clickToggleDot = (opts: Partial<ToggleDotOpts> = {}) => {
         style
     };
     const glOff: any = { ...glOn, ..._opts.fgOff };
-    return (_: any, attribs: any, state: boolean) => [
+    return (_: any, attribs: any, state: boolean, highlight: boolean) => [
         "svg",
         { ...svgSize, ...attribs },
+        blur,
         [
             "g",
+            ["circle", highlight ? hlOn : {}],
             ["circle", state ? bgOn : bgOff],
             glyph
                 ? ["text", state ? glOn : glOff, glyph]

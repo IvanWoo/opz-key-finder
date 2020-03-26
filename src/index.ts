@@ -55,8 +55,8 @@ const state = transduce(
 const toggleState = (i: number) => (state[i] = !state[i]);
 
 const wDotOpts: Partial<ToggleDotOpts> = {
-    r: 16
-    // pad: 2
+    r: 16,
+    pad: 2
     // margin: 2
 };
 
@@ -76,6 +76,9 @@ const wToggle = clickToggleDot({ ...wDotOpts });
 const cToggle = clickToggleDot({ ...cDotOpts });
 const bToggle = clickToggleDot({ ...bDotOpts });
 
+// TODO: unify with state into single obj
+let highlights = [];
+
 const toggleGroup = () => [
     "div.mb5",
     ...state.map((x, i) => [
@@ -90,7 +93,8 @@ const toggleGroup = () => [
                 class: "pointer mr0",
                 onclick: () => toggleState(i)
             },
-            x
+            x,
+            highlights.includes(i)
         ]
         // ["div.tc", i]
     ])
@@ -106,12 +110,12 @@ const keyGroup = (comparisons) => {
                 "div.dib",
                 [
                     "svg",
-                    { width: 110, height: 10 },
+                    { width: 220, height: 10 },
                     x.common_midis_size
                         ? [
                               "rect",
                               {
-                                  width: x.similarity * 100,
+                                  width: x.similarity * 200,
                                   height: 10,
                                   rx: 5,
                                   fill: "grey"
@@ -120,7 +124,14 @@ const keyGroup = (comparisons) => {
                         : []
                 ]
             ],
-            x.music_key
+            [
+                "span",
+                {
+                    onmouseover: () => (highlights = x.normalized_midi),
+                    onmouseout: () => (highlights = [])
+                },
+                x.music_key
+            ]
         ])
     ];
 };
@@ -137,12 +148,14 @@ const cancel = start(() => {
             multiplexObj({
                 music_key: map((x) => x.music_key),
                 tonic_midi: map((x) => x.tonic_midi),
+                normalized_midi: map((x) => x.normalized_midi),
                 common_midis: map((x) =>
                     intersection(new Set(x.normalized_midi), inputs_midi)
                 )
             }),
             multiplexObj({
                 music_key: map((x) => x.music_key),
+                normalized_midi: map((x) => x.normalized_midi),
                 common_midis: map((x) => x.common_midis),
                 common_midis_size: map((x) => x.common_midis.size),
                 similarity: map((x) =>
