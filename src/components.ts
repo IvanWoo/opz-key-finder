@@ -22,25 +22,25 @@ const DEFAULT_OPTS: ToggleOpts = {
     anim: 100,
     pad: 1,
     margin: 0,
-    hlOn: { fill: "#90B44B" },
+    hlOn: { fill: "#002FA7" },
     bgOn: { fill: "#CCCCCC" },
     bgOff: { fill: "#CCCCCC" },
     fgOn: { fill: "#E83015" },
     fgOff: { fill: "#fff" },
-    floor: 1
+    floor: 1,
 };
 
 const blur = [
     "filter",
     { id: "blur" },
-    ["feGaussianBlur", { in: "SourceGraphic", stdDeviation: ".25" }]
+    ["feGaussianBlur", { in: "SourceGraphic", stdDeviation: ".25" }],
 ];
 
 export const clickToggleDot = (opts: Partial<ToggleDotOpts> = {}) => {
     const _opts: ToggleDotOpts = {
         r: 5,
         ...DEFAULT_OPTS,
-        ...opts
+        ...opts,
     };
     const { r, pad, margin, glyph, floor } = _opts;
     const ratio = 0.5;
@@ -58,20 +58,20 @@ export const clickToggleDot = (opts: Partial<ToggleDotOpts> = {}) => {
     const hlOn: any = {
         ..._opts.hlOn,
         ...center,
-        r: br
+        r: br,
     };
     const bgOn: any = {
         ..._opts.bgOn,
         ...center,
         style,
-        r
+        r,
     };
     const bgOff = { ...bgOn, ..._opts.bgOff };
     const fgOn: any = {
         ..._opts.fgOn,
         ...center,
         style,
-        r: ir
+        r: ir,
     };
     const fgOff: any = { ...fgOn, ..._opts.fgOff };
     const glOn: any = {
@@ -82,7 +82,7 @@ export const clickToggleDot = (opts: Partial<ToggleDotOpts> = {}) => {
         "alignment-baseline": "central",
         font: "bold sans-serif",
         "font-size": totalH * ratio,
-        style
+        style,
     };
     const glOff: any = { ...glOn, ..._opts.fgOff };
     return (_: any, attribs: any, state: boolean, highlight: boolean) => [
@@ -95,8 +95,8 @@ export const clickToggleDot = (opts: Partial<ToggleDotOpts> = {}) => {
             ["circle", state ? bgOn : bgOff],
             glyph
                 ? ["text", state ? glOn : glOff, glyph]
-                : ["circle", state ? fgOn : fgOff]
-        ]
+                : ["circle", state ? fgOn : fgOff],
+        ],
     ];
 };
 

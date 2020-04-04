@@ -1,4 +1,5 @@
 import { start } from "@thi.ng/hdom";
+import { Atom } from "@thi.ng/atom";
 import {
     transduce,
     push,
@@ -9,14 +10,14 @@ import {
     multiplexObj,
     range,
     zip,
-    repeat
+    repeat,
 } from "@thi.ng/transducers";
 import { intersection } from "@thi.ng/associative";
 import { majorKey, MajorKey } from "@tonaljs/key";
 import { simplify, enharmonic } from "@tonaljs/note";
 import { toMidi } from "@tonaljs/midi";
 
-import { Scale, Midis, Comparison } from "./api";
+import { State, Scale, Midis, Comparison } from "./api";
 import { clickToggleDot, ToggleDotOpts, h2 } from "./components";
 
 const keys: string[] = [
@@ -31,7 +32,7 @@ const keys: string[] = [
     "G#",
     "A",
     "A#",
-    "B"
+    "B",
 ];
 
 const majorKeys: MajorKey[] = transduce(
@@ -51,7 +52,7 @@ let scales: Scale[] = transduce(
                 conj(),
                 x.scale
             )
-        )
+        ),
     }),
     push(),
     majorKeys
@@ -59,63 +60,69 @@ let scales: Scale[] = transduce(
 
 console.log(scales);
 
-// TODO: unify state and highlights into single obj
-const state: boolean[] = [...repeat(false, 12)];
+const DB = new Atom<State>({
+    keyState: [...repeat(false, 12)],
+    highlights: new Set(),
+    size: [window.innerWidth, window.innerHeight],
+});
 
-const toggleState = (i: number) => (state[i] = !state[i]);
-
-let highlights: Midis = new Set();
+const toggleKeyState = (i: number) =>
+    DB.resetIn(["keyState", i], !DB.deref().keyState[i]);
 
 const updateHighlights = (m: Midis) => {
-    highlights = m;
+    DB.resetIn(["highlights"], m);
 };
 
 const resetHighlights = () => {
     updateHighlights(new Set());
 };
 
+window.addEventListener("resize", () => {
+    DB.resetIn(["size"], [window.innerWidth, window.innerHeight]);
+});
+
 const wDotOpts: Partial<ToggleDotOpts> = {
+    anim: 0,
     r: 16,
-    pad: 2
+    pad: 2,
     // margin: 2
 };
 
 const cDotOpts: Partial<ToggleDotOpts> = {
     ...wDotOpts,
-    glyph: "C"
+    glyph: "C",
 };
 
 const bDotOpts: Partial<ToggleDotOpts> = {
     ...wDotOpts,
     bgOn: { fill: "#000" },
     bgOff: { fill: "#000" },
-    floor: 2
+    floor: 2,
 };
 
-const wToggle = clickToggleDot({ ...wDotOpts });
-const cToggle = clickToggleDot({ ...cDotOpts });
-const bToggle = clickToggleDot({ ...bDotOpts });
-
-const toggleGroup = () => [
-    "div.mb5",
-    ...state.map((x, i) => [
-        i === 4 ? "div.dib.mr4" : "div.dib",
-        [
-            i === 0
-                ? cToggle
-                : new Set([2, 4, 5, 7, 9, 11]).has(i)
-                ? wToggle
-                : bToggle,
-            {
-                class: "pointer mr0",
-                onclick: () => toggleState(i)
-            },
-            x,
-            highlights.has(i)
-        ]
-        // ["div.tc", i]
-    ])
-];
+const toggleGroup = (opts) => {
+    const state = DB.deref();
+    return () => [
+        "div.mb5",
+        ...state.keyState.map((x, i) => [
+            i === 4 ? "div.dib.mr4" : "div.dib",
+            [
+                i === 0
+                    ? clickToggleDot({ ...cDotOpts, ...opts })
+                    : new Set([2, 4, 5, 7, 9, 11]).has(i)
+                    ? clickToggleDot({ ...wDotOpts, ...opts })
+                    : clickToggleDot({ ...bDotOpts, ...opts }),
+                {
+                    class: "pointer mr0",
+                    onclick: () => toggleKeyState(i),
+                },
+                x,
+                state.highlights.has(i),
+            ],
+            // ["div.tc", i]
+        ]),
+    ];
+};
 
 const keyGroup = (comparisons: Comparison[]) => {
     // const maxSize = comparisons[0].common.size;
@@ -135,27 +142,32 @@ const keyGroup = (comparisons: Comparison[]) => {
                                   width: x.similarity * 200,
                                   height: 10,
                                   rx: 5,
-                                  fill: "grey"
-                              }
+                                  fill: "grey",
+                              },
                           ]
-                        : []
-                ]
+                        : [],
+                ],
             ],
             [
                 "span",
                 {
                     onmouseover: () => updateHighlights(x.normalizedMidis),
-                    onmouseout: () => resetHighlights()
+                    onmouseout: () => resetHighlights(),
                 },
-                x.musicKey
-            ]
-        ])
+                x.musicKey,
+            ],
+        ]),
     ];
 };
 
 const cancel = start(() => {
+    const state = DB.deref();
+    const keyState = state.keyState;
+    const size = state.size;
+    const toggleWidth = (size[0] * 0.9) / 13;
+
     let inputMidis: Midis = transduce(
-        map((x) => (state[x] ? x : null)),
+        map((x) => (keyState[x] ? x : null)),
         conj(),
         range(12)
     );
@@ -175,7 +187,7 @@ const cancel = start(() => {
                 (x) =>
                     x[1].size / inputMidis.size +
                     (inputMidis.has(x[0].tonicMidi) ? 0.1 : 0)
-            )
+            ),
         }),
         push(),
         zip(scales, commons)
@@ -185,7 +197,14 @@ const cancel = start(() => {
     return [
         "div",
         [h2, "KEY FINDER"],
-        ["div", toggleGroup, keyGroup(comparisons)]
+        [
+            "div",
+            toggleGroup({
+                r: (toggleWidth / 2) * (8 / 9),
+                pad: (toggleWidth / 2) * (1 / 9),
+            }),
+            keyGroup(comparisons),
+        ],
     ];
 });
 

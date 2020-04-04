@@ -2,6 +2,11 @@ import { MajorKey } from "@tonaljs/key";
 
 export type Midis = Set<number>;
 
+export interface State {
+    keyState: boolean[];
+    highlights: Midis;
+    size: [number, number];
+}
 export interface Scale {
     raw?: MajorKey;
     tonicMidi: number;
