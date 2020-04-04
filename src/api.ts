@@ -4,14 +4,14 @@ export type Midis = Set<number>;
 
 export interface Scale {
     raw?: MajorKey;
-    tonic_midi: number;
-    music_key: string;
-    normalized_midis: Midis;
+    tonicMidi: number;
+    musicKey: string;
+    normalizedMidis: Midis;
 }
 
 export interface Comparison {
-    music_key: string;
-    normalized_midis: Midis;
+    musicKey: string;
+    normalizedMidis: Midis;
     common: Midis;
     similarity: number;
 }

@@ -1,8 +1,4 @@
 import { start } from "@thi.ng/hdom";
-import { title } from "@thi.ng/hdom-components";
-import { majorKey, MajorKey } from "@tonaljs/key";
-import { simplify, enharmonic } from "@tonaljs/note";
-import { toMidi } from "@tonaljs/midi";
 import {
     transduce,
     push,
@@ -12,14 +8,18 @@ import {
     comp,
     multiplexObj,
     range,
-    zip
+    zip,
+    repeat
 } from "@thi.ng/transducers";
 import { intersection } from "@thi.ng/associative";
+import { majorKey, MajorKey } from "@tonaljs/key";
+import { simplify, enharmonic } from "@tonaljs/note";
+import { toMidi } from "@tonaljs/midi";
 
 import { Scale, Midis, Comparison } from "./api";
-import { clickToggleDot, ToggleDotOpts } from "./components";
+import { clickToggleDot, ToggleDotOpts, h2 } from "./components";
 
-const keys: Array<string> = [
+const keys: string[] = [
     "C",
     "C#",
     "D",
@@ -34,18 +34,18 @@ const keys: Array<string> = [
     "B"
 ];
 
-const majorKeys: Array<MajorKey> = transduce(
+const majorKeys: MajorKey[] = transduce(
     map((x) => majorKey(x)),
     push(),
     keys
 );
 
-let scales: Array<Scale> = transduce(
+let scales: Scale[] = transduce(
     multiplexObj({
         raw: map((x) => x),
-        tonic_midi: map((x) => toMidi(x.tonic + "2") % 12),
-        music_key: map((x) => `${x.tonic} ${x.type.slice(0, 3)}`),
-        normalized_midis: map((x) =>
+        tonicMidi: map((x) => toMidi(x.tonic + "2") % 12),
+        musicKey: map((x) => `${x.tonic} ${x.type.slice(0, 3)}`),
+        normalizedMidis: map((x) =>
             transduce(
                 map((y) => toMidi(y + "2") % 12),
                 conj(),
@@ -59,15 +59,20 @@ let scales: Array<Scale> = transduce(
 
 console.log(scales);
 
-const h2 = title({ element: "h2", attribs: { class: "blue" } });
-
-const state = transduce(
-    map((x) => Math.random() > 0.5),
-    push(),
-    range(12)
-);
+// TODO: unify state and highlights into single obj
+const state: boolean[] = [...repeat(false, 12)];
 
 const toggleState = (i: number) => (state[i] = !state[i]);
+
+let highlights: Midis = new Set();
+
+const updateHighlights = (m: Midis) => {
+    highlights = m;
+};
+
+const resetHighlights = () => {
+    updateHighlights(new Set());
+};
 
 const wDotOpts: Partial<ToggleDotOpts> = {
     r: 16,
@@ -91,9 +96,6 @@ const wToggle = clickToggleDot({ ...wDotOpts });
 const cToggle = clickToggleDot({ ...cDotOpts });
 const bToggle = clickToggleDot({ ...bDotOpts });
 
-// TODO: unify with state into single obj
-let highlights = new Set();
-
 const toggleGroup = () => [
     "div.mb5",
     ...state.map((x, i) => [
@@ -115,8 +117,8 @@ const toggleGroup = () => [
     ])
 ];
 
-const keyGroup = (comparisons: Array<Comparison>) => {
-    // const max_size = comparisons[0].common.size;
+const keyGroup = (comparisons: Comparison[]) => {
+    // const maxSize = comparisons[0].common.size;
     return () => [
         "div",
         ...comparisons.map((x, i) => [
@@ -142,37 +144,37 @@ const keyGroup = (comparisons: Array<Comparison>) => {
             [
                 "span",
                 {
-                    onmouseover: () => (highlights = x.normalized_midis),
-                    onmouseout: () => (highlights = new Set())
+                    onmouseover: () => updateHighlights(x.normalizedMidis),
+                    onmouseout: () => resetHighlights()
                 },
-                x.music_key
+                x.musicKey
             ]
         ])
     ];
 };
 
 const cancel = start(() => {
-    let input_midis: Midis = transduce(
+    let inputMidis: Midis = transduce(
         map((x) => (state[x] ? x : null)),
         conj(),
         range(12)
     );
 
-    let commons: Array<Midis> = transduce(
-        map((x) => intersection(x.normalized_midis, input_midis)),
+    let commons: Midis[] = transduce(
+        map((x) => intersection(x.normalizedMidis, inputMidis)),
         push(),
         scales
     );
 
-    let comparisons: Array<Comparison> = transduce(
+    let comparisons: Comparison[] = transduce(
         multiplexObj({
-            music_key: map((x) => x[0].music_key),
-            normalized_midis: map((x) => x[0].normalized_midis),
+            musicKey: map((x) => x[0].musicKey),
+            normalizedMidis: map((x) => x[0].normalizedMidis),
             common: map((x) => x[1]),
             similarity: map(
                 (x) =>
-                    x[1].size / input_midis.size +
-                    (input_midis.has(x[0].tonic_midi) ? 0.1 : 0)
+                    x[1].size / inputMidis.size +
+                    (inputMidis.has(x[0].tonicMidi) ? 0.1 : 0)
             )
         }),
         push(),

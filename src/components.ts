@@ -1,3 +1,5 @@
+import { title } from "@thi.ng/hdom-components";
+
 export interface ToggleOpts {
     anim: number;
     pad: number;
@@ -97,3 +99,5 @@ export const clickToggleDot = (opts: Partial<ToggleDotOpts> = {}) => {
         ]
     ];
 };
+
+export const h2 = title({ element: "h2", attribs: { class: "blue" } });
