@@ -22,7 +22,7 @@ const DEFAULT_OPTS: ToggleOpts = {
     anim: 100,
     pad: 1,
     margin: 0,
-    hlOn: { fill: "#002FA7" },
+    hlOn: { fill: "#E83015" },
     bgOn: { fill: "#CCCCCC" },
     bgOff: { fill: "#CCCCCC" },
     fgOn: { fill: "#E83015" },
@@ -100,4 +100,10 @@ export const clickToggleDot = (opts: Partial<ToggleDotOpts> = {}) => {
     ];
 };
 
-export const h2 = title({ element: "h2", attribs: { class: "blue" } });
+export const h2 = title({ element: "h2", attribs: { class: "#000" } });
+
+export const button = (
+    onclick: EventListener,
+    body: string,
+    args: any = {}
+) => (_: any, disabled: boolean) => ["a", { ...args, onclick, disabled }, body];

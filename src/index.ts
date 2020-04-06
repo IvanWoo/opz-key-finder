@@ -5,8 +5,8 @@ import {
     push,
     conj,
     map,
-    filter,
-    comp,
+    take,
+    choices,
     multiplexObj,
     range,
     zip,
@@ -18,7 +18,7 @@ import { simplify, enharmonic } from "@tonaljs/note";
 import { toMidi } from "@tonaljs/midi";
 
 import { State, Scale, Midis, Comparison } from "./api";
-import { clickToggleDot, ToggleDotOpts, h2 } from "./components";
+import { clickToggleDot, ToggleDotOpts, h2, button } from "./components";
 
 const keys: string[] = [
     "C",
@@ -45,7 +45,7 @@ let scales: Scale[] = transduce(
     multiplexObj({
         raw: map((x) => x),
         tonicMidi: map((x) => toMidi(x.tonic + "2") % 12),
-        musicKey: map((x) => `${x.tonic} ${x.type.slice(0, 3)}`),
+        musicKey: map((x) => x.tonic),
         normalizedMidis: map((x) =>
             transduce(
                 map((y) => toMidi(y + "2") % 12),
@@ -60,14 +60,25 @@ let scales: Scale[] = transduce(
 
 console.log(scales);
 
+const defaultKeyState = [...repeat(false, 12)];
+
 const DB = new Atom<State>({
-    keyState: [...repeat(false, 12)],
+    keyState: defaultKeyState,
     highlights: new Set(),
     size: [window.innerWidth, window.innerHeight],
 });
 
-const toggleKeyState = (i: number) =>
+const toggleKeyState = (i: number) => {
     DB.resetIn(["keyState", i], !DB.deref().keyState[i]);
+};
+
+const resetKeyState = () => {
+    DB.resetIn(["keyState"], defaultKeyState);
+};
+
+const randomKeyState = () => {
+    DB.resetIn(["keyState"], [...take(12, choices([true, false], [0.5, 0.5]))]);
+};
 
 const updateHighlights = (m: Midis) => {
     DB.resetIn(["highlights"], m);
@@ -80,6 +91,16 @@ const resetHighlights = () => {
 window.addEventListener("resize", () => {
     DB.resetIn(["size"], [window.innerWidth, window.innerHeight]);
 });
+
+const btOpts = {
+    class: "mr3 pv2 ph2 bg-black white f4",
+};
+
+const toolbar = () => {
+    const btClear = button(() => resetKeyState(), "Clear", btOpts);
+    const btRandom = button(() => randomKeyState(), "Random", btOpts);
+    return () => ["div.mv4", [btClear], [btRandom]];
+};
 
 const wDotOpts: Partial<ToggleDotOpts> = {
     anim: 0,
@@ -103,7 +124,7 @@ const bDotOpts: Partial<ToggleDotOpts> = {
 const toggleGroup = (opts) => {
     const state = DB.deref();
     return () => [
-        "div.mb5",
+        "div.mb4",
         ...state.keyState.map((x, i) => [
             i === 4 ? "div.dib.mr4" : "div.dib",
             [
@@ -124,37 +145,44 @@ const toggleGroup = (opts) => {
     ];
 };
 
-const keyGroup = (comparisons: Comparison[]) => {
-    // const maxSize = comparisons[0].common.size;
+const keyGroup = (comparisons: Comparison[], width: number) => {
+    const buffer = 0.1;
+    const whRatio = 35;
+    const bgOpts = {
+        width: width,
+        height: width / whRatio,
+        rx: 5,
+        fill: "#e2e2e2",
+    };
     return () => [
         "div",
         ...comparisons.map((x, i) => [
             "div.mv2.mr2",
+            {
+                onmouseover: () => updateHighlights(x.normalizedMidis),
+                onmouseout: () => resetHighlights(),
+            },
+            ["div", x.musicKey, ["small", " maj"]],
             [
                 "div.dib",
                 [
                     "svg",
-                    { width: 220, height: 10 },
-                    x.common.size
-                        ? [
-                              "rect",
-                              {
-                                  width: x.similarity * 200,
-                                  height: 10,
-                                  rx: 5,
-                                  fill: "grey",
-                              },
-                          ]
-                        : [],
+                    { width: width * (1 + buffer), height: width / whRatio },
+                    [
+                        "g",
+                        ["rect", bgOpts],
+                        x.common.size
+                            ? [
+                                  "rect",
+                                  {
+                                      ...bgOpts,
+                                      width: x.similarity * width,
+                                      fill: "#000",
+                                  },
+                              ]
+                            : [],
+                    ],
                 ],
-            ],
-            [
-                "span",
-                {
-                    onmouseover: () => updateHighlights(x.normalizedMidis),
-                    onmouseout: () => resetHighlights(),
-                },
-                x.musicKey,
             ],
         ]),
     ];
@@ -164,7 +192,8 @@ const cancel = start(() => {
     const state = DB.deref();
     const keyState = state.keyState;
     const size = state.size;
-    const toggleWidth = (size[0] * 0.9) / 13;
+    const toggleWidth = Math.min(18 * 2, (size[0] * 0.9) / 13);
+    const bWidth = Math.min(400, size[0] * 0.9);
 
     let inputMidis: Midis = transduce(
         map((x) => (keyState[x] ? x : null)),
@@ -196,14 +225,15 @@ const cancel = start(() => {
     comparisons = comparisons.sort((a, b) => b.similarity - a.similarity);
     return [
         "div",
-        [h2, "KEY FINDER"],
+        [h2, "OP-Z KEY FINDER"],
+        toolbar,
         [
             "div",
             toggleGroup({
                 r: (toggleWidth / 2) * (8 / 9),
                 pad: (toggleWidth / 2) * (1 / 9),
             }),
-            keyGroup(comparisons),
+            keyGroup(comparisons, bWidth),
         ],
     ];
 });
