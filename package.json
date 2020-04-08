@@ -17,7 +17,8 @@
         "@thi.ng/hdom": "^8.0.14",
         "@thi.ng/hdom-components": "^3.2.0",
         "@thi.ng/transducers": "^6.4.1",
-        "@tonaljs/modules": "^3.4.5"
+        "@tonaljs/modules": "^3.4.5",
+        "webmidi": "^2.5.1"
     },
     "devDependencies": {
         "autoprefixer": "^9.5.1",

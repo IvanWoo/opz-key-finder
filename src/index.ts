@@ -1,4 +1,5 @@
 import { start } from "@thi.ng/hdom";
+import { dropdown } from "@thi.ng/hdom-components";
 import { Atom } from "@thi.ng/atom";
 import {
     transduce,
@@ -16,6 +17,7 @@ import { intersection } from "@thi.ng/associative";
 import { majorKey, MajorKey } from "@tonaljs/key";
 import { simplify, enharmonic } from "@tonaljs/note";
 import { toMidi } from "@tonaljs/midi";
+import WebMidi, { InputEventNoteon } from "webmidi";
 
 import { State, Scale, Midis, Comparison } from "./api";
 import { clickToggleDot, ToggleDotOpts, h2, button } from "./components";
@@ -63,6 +65,8 @@ console.log(scales);
 const defaultKeyState = [...repeat(false, 12)];
 
 const DB = new Atom<State>({
+    enabledMidi: false,
+    midiDevices: [],
     keyState: defaultKeyState,
     highlights: new Set(),
     size: [window.innerWidth, window.innerHeight],
@@ -155,7 +159,7 @@ const keyGroup = (comparisons: Comparison[], width: number) => {
         fill: "#e2e2e2",
     };
     return () => [
-        "div",
+        "div.dib",
         ...comparisons.map((x, i) => [
             "div.mv2.mr2",
             {
@@ -164,7 +168,7 @@ const keyGroup = (comparisons: Comparison[], width: number) => {
             },
             ["div", x.musicKey, ["small", " maj"]],
             [
-                "div.dib",
+                "div",
                 [
                     "svg",
                     { width: width * (1 + buffer), height: width / whRatio },
@@ -188,8 +192,67 @@ const keyGroup = (comparisons: Comparison[], width: number) => {
     ];
 };
 
+const bindAllDevices = () => {
+    WebMidi.inputs.forEach((input) =>
+        input.addListener("noteon", "all", (e: InputEventNoteon) => {
+            toggleKeyState(e.note.number % 12);
+            console.log(
+                `Received 'noteon' message (${
+                    e.note.name + e.note.octave
+                }) from ${input.name}`
+            );
+        })
+    );
+};
+
+const isEnabledMidi = () => {
+    WebMidi.enable((err) => {
+        if (err) {
+            console.log("WebMidi could not be enabled.", err);
+            return;
+        } else {
+            console.log("WebMidi enabled!");
+            DB.resetIn(["enabledMidi"], true);
+            DB.resetIn(
+                ["midiDevices"],
+                WebMidi.inputs.map((x) => x.name)
+            );
+        }
+        bindAllDevices();
+    });
+};
+
+const bindDevice = (device: string) => {
+    if (device === "All Devices") {
+        bindAllDevices();
+        return;
+    } else {
+        WebMidi.inputs.forEach((input) => input.removeListener());
+        WebMidi.getInputByName(device).addListener(
+            "noteon",
+            "all",
+            (e: InputEventNoteon) => {
+                toggleKeyState(e.note.number % 12);
+                console.log(
+                    `Received 'noteon' message (${
+                        e.note.name + e.note.octave
+                    }) from ${device}`
+                );
+            }
+        );
+    }
+};
+
+isEnabledMidi();
+
 const cancel = start(() => {
     const state = DB.deref();
+    const enabledMidi = state.enabledMidi;
+    let midiDevices = state.midiDevices;
+    if (midiDevices.length > 0) {
+        midiDevices.unshift("All Devices");
+    }
+
     const keyState = state.keyState;
     const size = state.size;
     const toggleWidth = Math.min(18 * 2, (size[0] * 0.9) / 13);
@@ -226,6 +289,29 @@ const cancel = start(() => {
     return [
         "div",
         [h2, "OP-Z KEY FINDER"],
+        [
+            "div",
+            [
+                "p",
+                enabledMidi
+                    ? "Web MIDI is available : )"
+                    : "Web MIDI is unavailable : (",
+            ],
+            midiDevices.length > 1
+                ? [
+                      dropdown,
+                      {
+                          onchange: (e: Event) =>
+                              bindDevice((<HTMLSelectElement>e.target).value),
+                      },
+                      transduce(
+                          map((x) => [x, x]),
+                          push(),
+                          new Set(midiDevices)
+                      ),
+                  ]
+                : [],
+        ],
         toolbar,
         [
             "div",
