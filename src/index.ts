@@ -1,5 +1,9 @@
 import { start } from "@thi.ng/hdom";
-import { dropdown } from "@thi.ng/hdom-components";
+import {
+    dropdown,
+    slideToggleRect,
+    ToggleRectOpts,
+} from "@thi.ng/hdom-components";
 import { Atom } from "@thi.ng/atom";
 import {
     transduce,
@@ -47,7 +51,8 @@ let scales: Scale[] = transduce(
     multiplexObj({
         raw: map((x) => x),
         tonicMidi: map((x) => toMidi(x.tonic + "2") % 12),
-        musicKey: map((x) => x.tonic),
+        majorKey: map((x) => x.tonic),
+        minorKey: map((x) => simplify(x.minorRelative).toLowerCase()),
         normalizedMidis: map((x) =>
             transduce(
                 map((y) => toMidi(y + "2") % 12),
@@ -60,7 +65,7 @@ let scales: Scale[] = transduce(
     majorKeys
 );
 
-console.log(scales);
+// console.log(scales);
 
 const defaultKeyState = [...repeat(false, 12)];
 
@@ -70,6 +75,7 @@ const DB = new Atom<State>({
     keyState: defaultKeyState,
     highlights: new Set(),
     size: [window.innerWidth, window.innerHeight],
+    viewConfig: { showMinor: true, showSmall: true },
 });
 
 const toggleKeyState = (i: number) => {
@@ -149,7 +155,42 @@ const toggleGroup = (opts) => {
     ];
 };
 
+const rectOpts: Partial<ToggleRectOpts> = {
+    w: 16,
+    h: 8,
+    pad: 2,
+    margin: 0,
+};
+
+const toggleSq = slideToggleRect({ ...rectOpts, vertical: false });
+
+const toggleViewConfig = (target: string) => {
+    DB.resetIn(["viewConfig", target], !DB.deref().viewConfig[target]);
+};
+
+const viewConfigToggleGroup = (_: any, toggle: any) => {
+    const state = DB.deref();
+    const config = state.viewConfig;
+    return [
+        "div",
+        Object.entries(config).map(([k, v]) => [
+            "div.mv2",
+            [
+                toggle,
+                {
+                    class: "pointer mr2",
+                    onclick: () => toggleViewConfig(k),
+                },
+                v,
+            ],
+            k,
+        ]),
+    ];
+};
+
 const keyGroup = (comparisons: Comparison[], width: number) => {
+    const state = DB.deref();
+    const viewConfig = state.viewConfig;
     const buffer = 0.1;
     const whRatio = 35;
     const bgOpts = {
@@ -166,7 +207,22 @@ const keyGroup = (comparisons: Comparison[], width: number) => {
                 onmouseover: () => updateHighlights(x.normalizedMidis),
                 onmouseout: () => resetHighlights(),
             },
-            ["div", x.musicKey, ["small", " maj"]],
+            [
+                "div.flex",
+                [
+                    "div",
+                    x.majorKey,
+                    viewConfig.showSmall ? ["small", " maj"] : [],
+                ],
+                viewConfig.showMinor
+                    ? [
+                          "div",
+                          ["span.red", " ・ "],
+                          x.minorKey,
+                          viewConfig.showSmall ? ["small", " min"] : [],
+                      ]
+                    : [],
+            ],
             [
                 "div",
                 [
@@ -272,7 +328,8 @@ const cancel = start(() => {
 
     let comparisons: Comparison[] = transduce(
         multiplexObj({
-            musicKey: map((x) => x[0].musicKey),
+            majorKey: map((x) => x[0].majorKey),
+            minorKey: map((x) => x[0].minorKey),
             normalizedMidis: map((x) => x[0].normalizedMidis),
             common: map((x) => x[1]),
             similarity: map(
@@ -294,8 +351,14 @@ const cancel = start(() => {
             [
                 "p",
                 enabledMidi
-                    ? "Web MIDI is available : )"
-                    : "Web MIDI is unavailable : (",
+                    ? [
+                          "span.mid-gray.bg-washed-green.pa1",
+                          "Web MIDI is available",
+                      ]
+                    : [
+                          "span.mid-gray.bg-washed-red.pa1",
+                          "Web MIDI is unavailable",
+                      ],
             ],
             midiDevices.length > 1
                 ? [
@@ -314,12 +377,20 @@ const cancel = start(() => {
         ],
         toolbar,
         [
-            "div",
+            "div.mb2",
             toggleGroup({
                 r: (toggleWidth / 2) * (8 / 9),
                 pad: (toggleWidth / 2) * (1 / 9),
             }),
             keyGroup(comparisons, bWidth),
+        ],
+        [
+            "div.dib",
+            [
+                "details",
+                ["summary", "View Config"],
+                [viewConfigToggleGroup, toggleSq],
+            ],
         ],
     ];
 });

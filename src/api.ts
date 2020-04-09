@@ -8,16 +8,19 @@ export interface State {
     keyState: boolean[];
     highlights: Midis;
     size: [number, number];
+    viewConfig: any;
 }
 export interface Scale {
     raw?: MajorKey;
     tonicMidi: number;
-    musicKey: string;
+    majorKey: string;
+    minorKey: string;
     normalizedMidis: Midis;
 }
 
 export interface Comparison {
-    musicKey: string;
+    majorKey: string;
+    minorKey: string;
     normalizedMidis: Midis;
     common: Midis;
     similarity: number;
