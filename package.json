@@ -18,6 +18,7 @@
         "@thi.ng/hdom-components": "^3.2.0",
         "@thi.ng/transducers": "^6.4.1",
         "@tonaljs/modules": "^3.4.5",
+        "@tonejs/midi": "^2.0.20",
         "webmidi": "^2.5.1"
     },
     "devDependencies": {

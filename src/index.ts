@@ -22,6 +22,7 @@ import { majorKey, MajorKey } from "@tonaljs/key";
 import { simplify, enharmonic } from "@tonaljs/note";
 import { toMidi } from "@tonaljs/midi";
 import WebMidi, { InputEventNoteon } from "webmidi";
+import { Midi as parseMidi } from "@tonejs/midi";
 
 import { State, Scale, Midis, Comparison } from "./api";
 import { clickToggleDot, ToggleDotOpts, h2, button } from "./components";
@@ -72,6 +73,7 @@ const defaultKeyState = [...repeat(false, 12)];
 const DB = new Atom<State>({
     enabledMidi: false,
     midiDevices: [],
+    midiFile: "DROP MIDI FILE HERE...",
     keyState: defaultKeyState,
     highlights: new Set(),
     size: [window.innerWidth, window.innerHeight],
@@ -332,6 +334,59 @@ const midiDevicesStatus = (ctx: State) => {
     ];
 };
 
+const stopE = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+};
+
+const onDrop = (e) => {
+    stopE(e);
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+        const reader = new FileReader();
+        const file = files[0];
+        reader.onload = (e) => {
+            console.log(file);
+            if (file.type === "audio/midi") {
+                DB.resetIn(["midiFile"], file.name);
+                const parsedMidi = new parseMidi(e.target.event);
+                console.log(parsedMidi);
+            } else {
+                DB.resetIn(["midiFile"], "INVALID MIDI FILE...");
+            }
+        };
+        reader.readAsArrayBuffer(file);
+    }
+};
+
+const midiFileDropZone = (ctx: State) => {
+    const midiFile = ctx.midiFile;
+    const size = ctx.size;
+    const bWidth = Math.min(400, size[0] * 0.9);
+    return () => [
+        "div.mt2.mb4.ba.b--dotted.bw1.dib.pa4.v-mid.tc",
+        {
+            ondrop: (e) => {
+                e.target.classList.remove("dragover");
+                onDrop(e);
+            },
+            ondragenter: (e) => {
+                e.target.classList.add("dragover");
+                stopE(e);
+            },
+            ondragleave: (e) => {
+                e.target.classList.remove("dragover");
+                stopE(e);
+            },
+            ondragover: (e) => stopE(e),
+            style: {
+                width: `${bWidth}px`,
+            },
+        },
+        midiFile,
+    ];
+};
+
 const cancel = start(() => {
     const state = DB.deref();
 
@@ -382,8 +437,9 @@ const cancel = start(() => {
             }),
             keyGroup(comparisons, bWidth),
         ],
+        midiFileDropZone(state),
         [
-            "div.dib",
+            "div.db",
             [
                 "details",
                 ["summary", "View Config"],
