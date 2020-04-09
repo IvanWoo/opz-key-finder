@@ -301,13 +301,39 @@ const bindDevice = (device: string) => {
 
 isEnabledMidi();
 
-const cancel = start(() => {
-    const state = DB.deref();
-    const enabledMidi = state.enabledMidi;
-    let midiDevices = state.midiDevices;
+const midiDevicesStatus = (ctx: State) => {
+    const enabledMidi = ctx.enabledMidi;
+    let midiDevices = ctx.midiDevices;
     if (midiDevices.length > 0) {
         midiDevices.unshift("All Devices");
     }
+    return () => [
+        "div",
+        enabledMidi
+            ? ["span.mid-gray.bg-washed-green.pa1", "Web MIDI is available"]
+            : ["span.mid-gray.bg-washed-red.pa1", "Web MIDI is unavailable"],
+        [
+            "span.ml2",
+            midiDevices.length > 1
+                ? [
+                      dropdown,
+                      {
+                          onchange: (e: Event) =>
+                              bindDevice((<HTMLSelectElement>e.target).value),
+                      },
+                      transduce(
+                          map((x) => [x, x]),
+                          push(),
+                          new Set(midiDevices)
+                      ),
+                  ]
+                : [],
+        ],
+    ];
+};
+
+const cancel = start(() => {
+    const state = DB.deref();
 
     const keyState = state.keyState;
     const size = state.size;
@@ -346,35 +372,7 @@ const cancel = start(() => {
     return [
         "div",
         [h2, "OP-Z KEY FINDER"],
-        [
-            "div",
-            [
-                "p",
-                enabledMidi
-                    ? [
-                          "span.mid-gray.bg-washed-green.pa1",
-                          "Web MIDI is available",
-                      ]
-                    : [
-                          "span.mid-gray.bg-washed-red.pa1",
-                          "Web MIDI is unavailable",
-                      ],
-            ],
-            midiDevices.length > 1
-                ? [
-                      dropdown,
-                      {
-                          onchange: (e: Event) =>
-                              bindDevice((<HTMLSelectElement>e.target).value),
-                      },
-                      transduce(
-                          map((x) => [x, x]),
-                          push(),
-                          new Set(midiDevices)
-                      ),
-                  ]
-                : [],
-        ],
+        midiDevicesStatus(state),
         toolbar,
         [
             "div.mb2",
