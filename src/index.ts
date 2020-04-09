@@ -17,6 +17,7 @@ import {
     zip,
     repeat,
 } from "@thi.ng/transducers";
+import { frequencies } from "@thi.ng/iterators";
 import { intersection } from "@thi.ng/associative";
 import { majorKey, MajorKey } from "@tonaljs/key";
 import { simplify, enharmonic } from "@tonaljs/note";
@@ -346,13 +347,28 @@ const onDrop = (e) => {
         const reader = new FileReader();
         const file = files[0];
         reader.onload = (e) => {
-            console.log(file);
             if (file.type === "audio/midi") {
                 DB.resetIn(["midiFile"], file.name);
-                const parsedMidi = new parseMidi(e.target.event);
-                console.log(parsedMidi);
+                const parsedMidi = new parseMidi(e.target.result);
+                let tracks = parsedMidi.tracks;
+                tracks.sort((a, b) => b.notes.length - a.notes.length);
+
+                // take the most 7 frequency midi notes from the longest track
+                const track = tracks[0];
+                const midiNotes: number[] = transduce(
+                    map((x) => x[0] % 12),
+                    push(),
+                    take(7, frequencies(track.notes.map((x) => x.midi)))
+                );
+                // console.log(midiNotes);
+                resetKeyState();
+                midiNotes.forEach((x) => toggleKeyState(x));
             } else {
                 DB.resetIn(["midiFile"], "INVALID MIDI FILE...");
+                setTimeout(
+                    () => DB.resetIn(["midiFile"], "DROP MIDI FILE HERE..."),
+                    0.5 * 1000
+                );
             }
         };
         reader.readAsArrayBuffer(file);
