@@ -5,11 +5,16 @@ import {
     map,
     multiplexObj,
     zip,
+    repeat,
+    take,
+    choices,
 } from "@thi.ng/transducers";
+import { frequencies } from "@thi.ng/iterators";
 import { intersection } from "@thi.ng/associative";
 import { majorKey, MajorKey } from "@tonaljs/key";
 import { simplify, enharmonic } from "@tonaljs/note";
 import { toMidi } from "@tonaljs/midi";
+import { Midi as parseMidi } from "@tonejs/midi";
 
 import { Scale, Midis, Comparison } from "./api";
 
@@ -77,4 +82,24 @@ export const getComparisons = (inputMidis: Midis) => {
 
     comparisons = comparisons.sort((a, b) => b.similarity - a.similarity);
     return comparisons;
+};
+
+export const defaultKeyState = [...repeat(false, 12)];
+
+export const randomKeyState = [...take(12, choices([true, false], [0.5, 0.5]))];
+
+export const parseMidiFile = (result) => {
+    const parsedMidi = new parseMidi(result);
+    let tracks = parsedMidi.tracks;
+    tracks.sort((a, b) => b.notes.length - a.notes.length);
+
+    // take the most 7 frequency midi notes from the longest track
+    const track = tracks[0];
+    const midiNotes: number[] = transduce(
+        map((x) => x[0] % 12),
+        push(),
+        take(7, frequencies(track.notes.map((x) => x.midi)))
+    );
+
+    return midiNotes;
 };

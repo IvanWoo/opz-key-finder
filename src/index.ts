@@ -5,25 +5,17 @@ import {
     ToggleRectOpts,
 } from "@thi.ng/hdom-components";
 import { Atom } from "@thi.ng/atom";
-import {
-    transduce,
-    push,
-    conj,
-    map,
-    take,
-    choices,
-    range,
-    repeat,
-} from "@thi.ng/transducers";
-import { frequencies } from "@thi.ng/iterators";
+import { transduce, push, conj, map, range } from "@thi.ng/transducers";
 import WebMidi, { InputEventNoteon } from "webmidi";
-import { Midi as parseMidi } from "@tonejs/midi";
 
 import type { State, Midis, Comparison } from "./api";
 import { clickToggleDot, ToggleDotOpts, h2, button } from "./components";
-import { getComparisons } from "./utils";
-
-const defaultKeyState = [...repeat(false, 12)];
+import {
+    defaultKeyState,
+    randomKeyState,
+    getComparisons,
+    parseMidiFile,
+} from "./utils";
 
 const DB = new Atom<State>({
     enabledMidi: false,
@@ -43,8 +35,8 @@ const resetKeyState = () => {
     DB.resetIn(["keyState"], defaultKeyState);
 };
 
-const randomKeyState = () => {
-    DB.resetIn(["keyState"], [...take(12, choices([true, false], [0.5, 0.5]))]);
+const setRandomKeyState = () => {
+    DB.resetIn(["keyState"], randomKeyState);
 };
 
 const updateHighlights = (m: Midis) => {
@@ -65,7 +57,7 @@ const btOpts = {
 
 const toolbar = () => {
     const btClear = button(() => resetKeyState(), "Clear", btOpts);
-    const btRandom = button(() => randomKeyState(), "Random", btOpts);
+    const btRandom = button(() => setRandomKeyState(), "Random", btOpts);
     return () => ["div.mv4", [btClear], [btRandom]];
 };
 
@@ -303,17 +295,7 @@ const onDrop = (e) => {
         reader.onload = (e) => {
             if (file.type === "audio/midi") {
                 DB.resetIn(["midiFile"], file.name);
-                const parsedMidi = new parseMidi(e.target.result);
-                let tracks = parsedMidi.tracks;
-                tracks.sort((a, b) => b.notes.length - a.notes.length);
-
-                // take the most 7 frequency midi notes from the longest track
-                const track = tracks[0];
-                const midiNotes: number[] = transduce(
-                    map((x) => x[0] % 12),
-                    push(),
-                    take(7, frequencies(track.notes.map((x) => x.midi)))
-                );
+                const midiNotes = parseMidiFile(e.target.result);
                 // console.log(midiNotes);
                 resetKeyState();
                 midiNotes.forEach((x) => toggleKeyState(x));
