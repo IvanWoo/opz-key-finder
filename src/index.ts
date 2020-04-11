@@ -5,7 +5,7 @@ import {
     ToggleRectOpts,
 } from "@thi.ng/hdom-components";
 import { Atom } from "@thi.ng/atom";
-import { transduce, push, conj, map, range } from "@thi.ng/transducers";
+import { transduce, push, map } from "@thi.ng/transducers";
 import WebMidi, { InputEventNoteon } from "webmidi";
 
 import type { State, Midis, Comparison } from "./api";
@@ -15,6 +15,7 @@ import {
     randomKeyState,
     getComparisons,
     parseMidiFile,
+    getInputMidis,
 } from "./utils";
 
 const DB = new Atom<State>({
@@ -347,12 +348,7 @@ const cancel = start(() => {
     const toggleWidth = Math.min(18 * 2, (size[0] * 0.9) / 13);
     const bWidth = Math.min(400, size[0] * 0.9);
 
-    let inputMidis: Midis = transduce(
-        map((x) => (keyState[x] ? x : null)),
-        conj(),
-        range(12)
-    );
-
+    const inputMidis = getInputMidis(keyState);
     const comparisons: Comparison[] = getComparisons(inputMidis);
     return [
         "div",

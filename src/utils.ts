@@ -8,6 +8,7 @@ import {
     repeat,
     take,
     choices,
+    range,
 } from "@thi.ng/transducers";
 import { frequencies } from "@thi.ng/iterators";
 import { intersection } from "@thi.ng/associative";
@@ -102,4 +103,13 @@ export const parseMidiFile = (result) => {
     );
 
     return midiNotes;
+};
+
+export const getInputMidis = (keyState) => {
+    const inputMidis: Midis = transduce(
+        map((x) => (keyState[x] ? x : null)),
+        conj(),
+        range(12)
+    );
+    return inputMidis;
 };
