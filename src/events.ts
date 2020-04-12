@@ -1,0 +1,17 @@
+export const ROUTE_TO = "route-to";
+export const TOGGLE_DEBUG = "toggle-debug";
+export const TOGGLE_KEY_STATE = "toggle-key-state";
+export const SET_KEY_STATE = "set-key-state";
+export const RESET_KEY_STATE = "reset-key-state";
+export const SET_RANDOM_KEY_STATE = "set-random-key-state";
+export const SET_HIGHLIGHTS = "set-highlights";
+export const RESET_HIGHLIGHTS = "reset-highlights";
+export const SET_SIZE = "set-size";
+export const TOGGLE_VIEW_CONFIG = "toggle-view-config";
+// export const TOGGLE_ENABLED_MIDI = "toggle-enabled-midi";
+export const SET_MIDI_DEVICES = "set-midi-devices";
+export const BIND_ALL_DEVICES = "bind-all-devices";
+export const BIND_DEVICES = "bind-devices";
+export const SET_MIDI_FILE = "set-midi-file";
+export const SET_MIDI_FILE_ERROR = "set-midi-file-error";
+export const SET_COMPARISON = "set-comparison";

@@ -1,7 +1,8 @@
 import {
     transduce,
     push,
-    conj,
+    comp,
+    filter,
     map,
     multiplexObj,
     zip,
@@ -13,7 +14,7 @@ import {
 import { frequencies } from "@thi.ng/iterators";
 import { intersection } from "@thi.ng/associative";
 import { majorKey, MajorKey } from "@tonaljs/key";
-import { simplify, enharmonic } from "@tonaljs/note";
+import { simplify } from "@tonaljs/note";
 import { toMidi } from "@tonaljs/midi";
 import { Midi as parseMidi } from "@tonejs/midi";
 
@@ -49,7 +50,7 @@ export const scales: Scale[] = transduce(
         normalizedMidis: map((x) =>
             transduce(
                 map((y) => toMidi(y + "2") % 12),
-                conj(),
+                push(),
                 x.scale
             )
         ),
@@ -58,9 +59,23 @@ export const scales: Scale[] = transduce(
     majorKeys
 );
 
-export const getComparisons = (inputMidis: Midis) => {
-    let commons: Midis[] = transduce(
-        map((x) => intersection(x.normalizedMidis, inputMidis)),
+export const getComparisons = (keyState) => {
+    const inputMidis: Midis = transduce(
+        comp(
+            map((x) => (keyState[x] ? x : null)),
+            filter((x) => x !== null)
+        ),
+        push(),
+        range(12)
+    );
+
+    const commons: Midis[] = transduce(
+        comp(
+            map((x) =>
+                intersection(new Set(x.normalizedMidis), new Set(inputMidis))
+            ),
+            map((x) => Array.from(x))
+        ),
         push(),
         scales
     );
@@ -73,8 +88,8 @@ export const getComparisons = (inputMidis: Midis) => {
             common: map((x) => x[1]),
             similarity: map(
                 (x) =>
-                    x[1].size / inputMidis.size +
-                    (inputMidis.has(x[0].tonicMidi) ? 0.1 : 0)
+                    x[1].length / inputMidis.length +
+                    (inputMidis.includes(x[0].tonicMidi) ? 0.1 : 0)
             ),
         }),
         push(),
@@ -101,15 +116,6 @@ export const parseMidiFile = (result) => {
         push(),
         take(7, frequencies(track.notes.map((x) => x.midi)))
     );
-
-    return midiNotes;
-};
-
-export const getInputMidis = (keyState) => {
-    const inputMidis: Midis = transduce(
-        map((x) => (keyState[x] ? x : null)),
-        conj(),
-        range(12)
-    );
-    return inputMidis;
+    // different midis notes could be normalized to same number
+    return Array.from(new Set(midiNotes));
 };
