@@ -1,5 +1,7 @@
 # opz-key-finder
 
+![banner](https://github.com/IvanWoo/key-finder/blob/master/assets/banner.png)
+
 [Live demo](https://yifanwu.studio/key-finder/)
 
 ## About
