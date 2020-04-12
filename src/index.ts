@@ -20,7 +20,7 @@ import {
 
 const DB = new Atom<State>({
     enabledMidi: false,
-    midiDevices: [],
+    midiDevices: new Set(),
     midiFile: "DROP MIDI FILE HERE...",
     keyState: defaultKeyState,
     highlights: new Set(),
@@ -221,7 +221,7 @@ const isEnabledMidi = () => {
             DB.resetIn(["enabledMidi"], true);
             DB.resetIn(
                 ["midiDevices"],
-                WebMidi.inputs.map((x) => x.name)
+                new Set(WebMidi.inputs.map((x) => x.name))
             );
         }
         bindAllDevices();
@@ -254,9 +254,6 @@ isEnabledMidi();
 const midiDevicesStatus = (ctx: State) => {
     const enabledMidi = ctx.enabledMidi;
     let midiDevices = ctx.midiDevices;
-    if (midiDevices.length > 0) {
-        midiDevices.unshift("All Devices");
-    }
     return () => [
         "div",
         enabledMidi
@@ -264,7 +261,7 @@ const midiDevicesStatus = (ctx: State) => {
             : ["span.mid-gray.bg-washed-red.pa1", "Web MIDI is unavailable"],
         [
             "span.ml2",
-            midiDevices.length > 1
+            midiDevices.size >= 1
                 ? [
                       dropdown,
                       {
@@ -274,7 +271,7 @@ const midiDevicesStatus = (ctx: State) => {
                       transduce(
                           map((x) => [x, x]),
                           push(),
-                          new Set(midiDevices)
+                          new Set(["All Devices", ...midiDevices])
                       ),
                   ]
                 : [],

@@ -4,7 +4,7 @@ export type Midis = Set<number>;
 
 export interface State {
     enabledMidi: boolean;
-    midiDevices: string[];
+    midiDevices: Set<string>;
     midiFile: string;
     keyState: boolean[];
     highlights: Midis;
