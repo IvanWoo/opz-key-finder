@@ -1,5 +1,5 @@
 {
-    "name": "key-finder",
+    "name": "opz-key-finder",
     "version": "1.0.0",
     "description": "",
     "repository": "https://github.com/IvanWoo/key-finder",
@@ -9,7 +9,8 @@
         "clean": "rimraf .cache build out dist",
         "prep": "yarn clean && mkdir -p out",
         "build": "yarn prep && parcel build index.html -d out --no-source-maps --no-cache --experimental-scope-hoisting --detailed-report --public-url ./",
-        "start": "yarn prep && parcel index.html -p 8080 --open -d out"
+        "start": "yarn prep && parcel index.html -p 8080 --open -d out",
+        "doc": "npx madge --extensions ts --dot ./src/ > ./doc/overview.gv"
     },
     "dependencies": {
         "@thi.ng/api": "^6.10.0",
