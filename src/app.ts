@@ -59,7 +59,7 @@ export class App {
         );
 
         // instrument all event handlers to trace events in console
-        this.ctx.bus.instrumentWith([trace]);
+        // this.ctx.bus.instrumentWith([trace]);
 
         this.addViews({
             route: "route",

@@ -62,7 +62,7 @@ export const CONFIG: AppConfig = {
 
         // reset all keys
         [ev.RESET_KEY_STATE]: [
-            (_, [__, ___]) => ({
+            () => ({
                 [FX_DISPATCH_NOW]: [ev.SET_KEY_STATE, defaultKeyState],
             }),
         ],
@@ -86,14 +86,14 @@ export const CONFIG: AppConfig = {
 
         // reset highlights
         [ev.RESET_HIGHLIGHTS]: [
-            (_, [__, ___]) => ({
+            () => ({
                 [FX_DISPATCH_NOW]: [ev.SET_HIGHLIGHTS, []],
             }),
         ],
 
         // set size
         [ev.SET_SIZE]: [
-            (_, [__, ___]) => ({
+            () => ({
                 [FX_DISPATCH_NOW]: [
                     EV_SET_VALUE,
                     ["size", [window.innerWidth, window.innerHeight]],
@@ -127,7 +127,7 @@ export const CONFIG: AppConfig = {
 
         // set midi file error
         [ev.SET_MIDI_FILE_ERROR]: [
-            (_, [__, ___]) => ({
+            () => ({
                 [FX_DISPATCH_NOW]: [ev.SET_MIDI_FILE, "INVALID MIDI FILE..."],
                 [FX_DISPATCH_ASYNC]: [
                     FX_DELAY,
