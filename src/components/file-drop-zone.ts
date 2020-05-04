@@ -45,7 +45,7 @@ const onDrop = (bus: EventBus, e) => {
     }
 };
 
-export const midiFileDropZone = (ctx: AppContext) => {
+export const fileDropZone = (ctx: AppContext) => {
     const bus = ctx.bus;
     const views = ctx.views;
     const midiFile = views.midiFile.deref()!;

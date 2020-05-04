@@ -3,7 +3,7 @@ import { midiDevicesStatus } from "./midi-devices-status";
 import { toolbar } from "./toolbar";
 import { toggleGroup } from "./toggle-group";
 import { keyGroup } from "./key-group";
-import { midiFileDropZone } from "./midi-file-drop-zone";
+import { fileDropZone } from "./file-drop-zone";
 import { viewConfigToggleGroup } from "./view-config-toggle-group";
 import type { AppContext } from "../api";
 
@@ -16,7 +16,7 @@ export const home = (ctx: AppContext) => {
         [midiDevicesStatus, ctx],
         [toolbar, ctx],
         ["div.mb2", [toggleGroup, ctx], [keyGroup, ctx]],
-        [midiFileDropZone, ctx],
+        [fileDropZone, ctx],
         [
             "div.db",
             [
