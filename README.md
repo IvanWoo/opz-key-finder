@@ -13,6 +13,7 @@ Features:
 - OP-Z inspired click component
 - Interactive with MIDI inputs via Web MIDI API
 - Drag and drop MIDI files
+- Drag and drop Audio files including mp3, wav and aac
 
 ## Building
 

@@ -1,5 +1,5 @@
 import { AppContext } from "../api";
-import { parseMidiFile, defaultKeyState } from "../utils";
+import { parseMidiFile, defaultKeyState, parseAudioFile } from "../utils";
 import { EventBus } from "@thi.ng/interceptors";
 import { SET_MIDI_FILE, SET_MIDI_FILE_ERROR, SET_KEY_STATE } from "../events";
 
@@ -14,10 +14,23 @@ const onDrop = (bus: EventBus, e) => {
     if (files && files.length > 0) {
         const reader = new FileReader();
         const file = files[0];
-        reader.onload = (e) => {
+        reader.onload = async (e) => {
             if (file.type === "audio/midi") {
                 bus.dispatch([SET_MIDI_FILE, file.name]);
                 const midiNotes = parseMidiFile(e.target.result);
+                bus.dispatch([
+                    SET_KEY_STATE,
+                    defaultKeyState.map((v, k) =>
+                        midiNotes.includes(k) ? true : false
+                    ),
+                ]);
+            } else if (
+                file.type === "audio/aac" ||
+                file.type === "audio/mpeg" ||
+                file.type === "audio/wav"
+            ) {
+                bus.dispatch([SET_MIDI_FILE, file.name]);
+                const midiNotes = await parseAudioFile(e.target.result);
                 bus.dispatch([
                     SET_KEY_STATE,
                     defaultKeyState.map((v, k) =>

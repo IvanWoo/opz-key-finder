@@ -24,6 +24,7 @@
         "@thi.ng/transducers": "^6.4.1",
         "@tonaljs/modules": "^3.4.5",
         "@tonejs/midi": "^2.0.20",
+        "meyda": "^4.3.1",
         "webmidi": "^2.5.1"
     },
     "devDependencies": {

@@ -17,6 +17,7 @@ import { majorKey, MajorKey } from "@tonaljs/key";
 import { simplify } from "@tonaljs/note";
 import { toMidi } from "@tonaljs/midi";
 import { Midi as parseMidi } from "@tonejs/midi";
+import Meyda from "meyda";
 
 import { Scale, Midis, Comparison } from "./api";
 
@@ -118,4 +119,70 @@ export const parseMidiFile = (result) => {
     );
     // different midis notes could be normalized to same number
     return Array.from(new Set(midiNotes));
+};
+
+// https://observablehq.com/@harrislapiroff/chord-analysis
+const createAudioContext = () => {
+    try {
+        return new AudioContext();
+    } catch {
+        // Safari
+        return new window.webkitAudioContext();
+    }
+};
+
+const decodeAudioData = async (context, arrayBuffer) => {
+    try {
+        return await context.decodeAudioData(arrayBuffer);
+    } catch {
+        // Safari
+        return new Promise((reject, resolve) => {
+            context.decodeAudioData(arrayBuffer, reject, resolve);
+        });
+    }
+};
+
+const nearestPowerOf2 = (n) => {
+    return Math.pow(2, Math.round(Math.log(n) / Math.log(2)));
+};
+
+export const parseAudioFile = async (result) => {
+    const SAMPLES_PER_SECOND = 1;
+    const context = createAudioContext();
+    const audioBuffer = await decodeAudioData(context, result);
+
+    const audioArray = audioBuffer.getChannelData(0);
+
+    const chunkSize = nearestPowerOf2(
+        audioBuffer.sampleRate / SAMPLES_PER_SECOND
+    );
+    const chunkCount = Math.floor(audioArray.length / chunkSize);
+
+    const chroma = transduce(
+        map((i) =>
+            Meyda.extract(
+                "chroma",
+                audioArray.slice(i * chunkSize, (i + 1) * chunkSize)
+            )
+        ),
+        push(),
+        range(chunkCount)
+    );
+
+    const coreNotes = transduce(
+        map((x) => x.indexOf(1)),
+        push(),
+        chroma
+    );
+
+    // take the most 7 frequency midi notes
+    return transduce(
+        map((x) => x[0]),
+        push(),
+        transduce(
+            map((x) => x),
+            push(),
+            frequencies(coreNotes)
+        ).sort((a, b) => b[1] - a[1])
+    ).slice(0, 7);
 };

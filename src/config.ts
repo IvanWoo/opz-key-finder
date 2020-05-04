@@ -131,7 +131,7 @@ export const CONFIG: AppConfig = {
                 [FX_DISPATCH_NOW]: [ev.SET_MIDI_FILE, "INVALID MIDI FILE..."],
                 [FX_DISPATCH_ASYNC]: [
                     FX_DELAY,
-                    [500, "DROP MIDI FILE HERE..."],
+                    [500, "DROP MIDI/AUDIO FILE HERE..."],
                     ev.SET_MIDI_FILE,
                     ev.SET_MIDI_FILE,
                 ],
@@ -163,7 +163,7 @@ export const CONFIG: AppConfig = {
     initialState: {
         enabledMidi: false,
         midiDevices: [],
-        midiFile: "DROP MIDI FILE HERE...",
+        midiFile: "DROP MIDI/AUDIO FILE HERE...",
         keyState: defaultKeyState,
         highlights: [],
         size: [window.innerWidth, window.innerHeight],
