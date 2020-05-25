@@ -1,0 +1,42 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Install and Build 🔧
+        run: |
+          yarn install
+          yarn build
+
+      - name: Checkout Host Repo
+        uses: actions/checkout@v2
+        with:
+          repository: IvanWoo/IvanWoo.github.io
+          token: ${{ secrets.GH_PAT }}
+          path: host-repo
+
+      - name: Copy Out to Host Repo
+        run: |
+          rm -rf host-repo/key-finder
+          mkdir host-repo/key-finder
+          cp -a out/. host-repo/key-finder
+
+      - name: Commit Changes and Push
+        run: |
+          cd host-repo
+          git add .
+          git config --local user.email "tyivanwu@gmail.com"
+          git config --local user.name "Yifan Wu"
+          git commit -m "🎵 update key-finder, cheers!" -a
+          git push
