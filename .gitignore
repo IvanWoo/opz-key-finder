@@ -2,6 +2,9 @@ out
 /.tmp
 .cache
 
+# dotenv environment variables file
+.env
+
 # dependencies
 /node_modules
 

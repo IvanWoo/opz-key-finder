@@ -185,7 +185,7 @@ export const CONFIG: AppConfig = {
     },
 
     ui: {
-        root: { class: "flex-ns sans-serif ma0" },
+        root: { class: "cf flex-ns sans-serif ma0" },
         toolbar: {
             button: { class: "mr3 pv2 ph2 bg-black white f4" },
         },
@@ -193,10 +193,10 @@ export const CONFIG: AppConfig = {
             class: "ma0 ml4 pa2 f7 bg-light-gray code overflow-x-hidden",
         },
         column: {
-            content: [{ class: "w-90-ns ma2" }, { class: "w-50-ns ma2" }],
+            content: [{ class: "fl w-90-ns ma2" }, { class: "fl w-50-ns ma2" }],
             debug: [
-                { class: "w-10-ns ma2 close" },
-                { class: "w-50-ns ma2 open" },
+                { class: "fl w-10-ns ma2 close" },
+                { class: "fl w-50-ns ma2 open" },
             ],
         },
         debugToggle: { class: "toggle pointer" },

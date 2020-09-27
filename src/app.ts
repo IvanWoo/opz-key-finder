@@ -10,6 +10,8 @@ import * as ev from "./events";
 import type { IObjectOf } from "@thi.ng/api";
 import type { AppConfig, AppContext, AppViews, ViewSpec } from "./api";
 
+const ENV = process.env.ENV;
+
 /**
  * Generic base app skeleton. You can use this as basis for your own
  * apps.
@@ -59,7 +61,9 @@ export class App {
         );
 
         // instrument all event handlers to trace events in console
-        // this.ctx.bus.instrumentWith([trace]);
+        if (ENV && ENV === "debug") {
+            this.ctx.bus.instrumentWith([trace]);
+        }
 
         this.addViews({
             route: "route",
@@ -124,10 +128,17 @@ export class App {
         const ui = this.ctx.ui;
         return [
             "div",
-            // ui.root,
-            ["div", this.ctx.views.routeComponent],
-            // ["div", ui.column.content[debug], this.ctx.views.routeComponent],
-            // [debugContainer, debug, this.ctx.views.json],
+            ui.root,
+            ENV && ENV === "debug"
+                ? [
+                      [
+                          "div",
+                          ui.column.content[debug],
+                          this.ctx.views.routeComponent,
+                      ],
+                      [debugContainer, debug, this.ctx.views.json],
+                  ]
+                : ["div", this.ctx.views.routeComponent],
         ];
     }
 }
