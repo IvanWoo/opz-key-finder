@@ -7,23 +7,22 @@ import { fileDropZone } from "./file-drop-zone";
 import { viewConfigToggleGroup } from "./view-config-toggle-group";
 import type { AppContext } from "../api";
 
-const h2 = title({ element: "h2", attribs: { class: "#000" } });
+const h2 = title({
+    element: "h2",
+    attribs: { class: "text-2xl font-extrabold mb-2" },
+});
 
 export const home = (ctx: AppContext) => {
     return () => [
         "div",
         [h2, "OP-Z KEY FINDER"],
-        [midiDevicesStatus, ctx],
-        [toolbar, ctx],
-        ["div.mb2", [toggleGroup, ctx], [keyGroup, ctx]],
-        [fileDropZone, ctx],
+        ["div.pb-4", midiDevicesStatus],
+        ["div.pb-4", toolbar],
+        ["div.mb-4", [toggleGroup], [keyGroup]],
+        [fileDropZone],
         [
-            "div.db",
-            [
-                "details",
-                ["summary", "View Config"],
-                [viewConfigToggleGroup, ctx],
-            ],
+            "div.block",
+            ["details", ["summary", "View Config"], [viewConfigToggleGroup]],
         ],
     ];
 };

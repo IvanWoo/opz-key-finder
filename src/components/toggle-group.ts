@@ -54,7 +54,6 @@ export const toggleGroup = (ctx: AppContext) => {
                     ? clickToggleDot({ ...wDotOpts, ...opts })
                     : clickToggleDot({ ...bDotOpts, ...opts }),
                 {
-                    class: "pointer mr0",
                     onclick: (e) => {
                         e.preventDefault();
                         ctx.bus.dispatch([TOGGLE_KEY_STATE, i]);

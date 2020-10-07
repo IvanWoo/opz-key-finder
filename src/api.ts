@@ -68,10 +68,12 @@ export interface UIAttribs {
     midiDevicesStatus: any;
     toolbar: any;
     toggleGroup: any;
+    keyGroup: any;
     fileDropZone: any;
     debugToggle: any;
     code: any;
     column: any;
+    viewConfigToggleGroup: any;
 }
 
 // app related types
