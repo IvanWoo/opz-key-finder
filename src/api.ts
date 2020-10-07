@@ -65,7 +65,9 @@ export interface AppContext {
  */
 export interface UIAttribs {
     root: any;
+    midiDevicesStatus: any;
     toolbar: any;
+    fileDropZone: any;
     debugToggle: any;
     code: any;
     column: any;

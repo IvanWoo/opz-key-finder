@@ -55,20 +55,23 @@ const bindDevice = (bus: EventBus, device: string) => {
 
 export const midiDevicesStatus = (ctx: AppContext) => {
     const views = ctx.views;
+    const ui = ctx.ui;
     const bus = ctx.bus;
     return () => {
         const enabledMidi = views.enabledMidi.deref()!;
         let midiDevices = views.midiDevices.deref()!;
         return [
             "div",
-            enabledMidi
-                ? ["span.mid-gray.bg-washed-green.pa1", "Web MIDI is available"]
-                : [
-                      "span.mid-gray.bg-washed-red.pa1",
-                      "Web MIDI is unavailable",
-                  ],
             [
-                "span.ml2",
+                "span",
+                ui.midiDevicesStatus.content[Number(enabledMidi)],
+                enabledMidi
+                    ? "Web MIDI is available"
+                    : "Web MIDI is unavailable",
+            ],
+            [
+                "span",
+                ui.midiDevicesStatus.dropdown,
                 midiDevices.length >= 1
                     ? [
                           dropdown,

@@ -20,5 +20,5 @@ export const toolbar = (ctx: AppContext) => {
         "Random",
         ui.toolbar.button
     );
-    return () => ["div.mv4", [btClear], [btRandom]];
+    return () => ["div", ui.toolbar.root, [btClear], [btRandom]];
 };

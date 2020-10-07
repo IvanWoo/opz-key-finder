@@ -186,8 +186,22 @@ export const CONFIG: AppConfig = {
 
     ui: {
         root: { class: "cf flex-ns sans-serif ma0" },
+        midiDevicesStatus: {
+            content: [
+                { class: "mid-gray pa1 bg-washed-red" },
+                { class: "mid-gray pa1 bg-washed-green" },
+            ],
+            dropdown: { class: "ml2" },
+        },
         toolbar: {
-            button: { class: "mr3 pv2 ph2 bg-black white f4" },
+            root: { class: "mv4" },
+            button: { class: "mr3 pv2 ph2 f4 nm-flat-gray-200" },
+        },
+        fileDropZone: {
+            root: {
+                class:
+                    "mt2 mb4 ba b--dotted bw1 dib pa4 v-mid tc nm-flat-gray-200-lg",
+            },
         },
         code: {
             class: "ma0 ml4 pa2 f7 bg-light-gray code overflow-x-hidden",

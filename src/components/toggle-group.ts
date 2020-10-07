@@ -34,7 +34,9 @@ export const toggleGroup = (ctx: AppContext) => {
     return [
         "div.mb4",
         ...views.keyState.deref()!.map((x, i) => [
-            i === 4 ? "div.dib.mr4" : "div.dib",
+            i === 4
+                ? "div.dib.mr4.nm-flat-gray-200-lg.rounded-full"
+                : "div.dib.nm-flat-gray-200-lg.rounded-full",
             [
                 i === 0
                     ? clickToggleDot({ ...cDotOpts, ...opts })
