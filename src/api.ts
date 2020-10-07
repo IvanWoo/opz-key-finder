@@ -67,6 +67,7 @@ export interface UIAttribs {
     root: any;
     midiDevicesStatus: any;
     toolbar: any;
+    toggleGroup: any;
     fileDropZone: any;
     debugToggle: any;
     code: any;

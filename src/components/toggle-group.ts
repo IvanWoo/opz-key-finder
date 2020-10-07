@@ -18,11 +18,22 @@ const bDotOpts: Partial<ToggleDotOpts> = {
     ...wDotOpts,
     bgOn: { fill: "#000" },
     bgOff: { fill: "#000" },
-    floor: 2,
+    // floor: 2,
+};
+
+const getClass = (i: number, ui: any) => {
+    if ([1, 3, 6, 8, 10].includes(i)) {
+        return ui.minor;
+    } else if (i === 4) {
+        return ui.e;
+    } else {
+        return ui.major;
+    }
 };
 
 export const toggleGroup = (ctx: AppContext) => {
     const views = ctx.views;
+    const ui = ctx.ui;
 
     const size = views.size.deref()!;
     const toggleWidth = Math.min(18 * 2, (size[0] * 0.9) / 13);
@@ -34,9 +45,8 @@ export const toggleGroup = (ctx: AppContext) => {
     return [
         "div.mb4",
         ...views.keyState.deref()!.map((x, i) => [
-            i === 4
-                ? "div.dib.mr4.nm-flat-gray-200-lg.rounded-full"
-                : "div.dib.nm-flat-gray-200-lg.rounded-full",
+            "div",
+            getClass(i, ui.toggleGroup.key),
             [
                 i === 0
                     ? clickToggleDot({ ...cDotOpts, ...opts })

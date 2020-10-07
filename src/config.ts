@@ -197,6 +197,14 @@ export const CONFIG: AppConfig = {
             root: { class: "mv4" },
             button: { class: "mr3 pv2 ph2 f4 nm-flat-gray-200" },
         },
+        toggleGroup: {
+            root: { class: "" },
+            key: {
+                major: { class: "dib nm-flat-gray-200-lg rounded-full" },
+                e: { class: "dib nm-flat-gray-200-lg rounded-full mr-8" },
+                minor: { class: "dib nm-flat-gray-200-lg rounded-full mb-8" },
+            },
+        },
         fileDropZone: {
             root: {
                 class:
