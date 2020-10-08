@@ -188,14 +188,15 @@ export const CONFIG: AppConfig = {
         root: { class: "clearfix flex flex-row font-sans m-0" },
         midiDevicesStatus: {
             content: [
-                { class: "gray-500 p-1 bg-red-200" },
-                { class: "gray-500 p-1 bg-green-200" },
+                { class: "gray-500 p-1 bg-red-200 rounded-full" },
+                { class: "gray-500 p-1 bg-green-200 rounded-full" },
             ],
             dropdown: {
                 root: {
-                    class: "ml-2 rounded-full nm-flat-gray-200 p-2 font-thin",
+                    class:
+                        "ml-2 rounded-full nm-flat-gray-200 p-2 font-medium uppercase",
                 },
-                selection: { class: "bg-transparent font-medium" },
+                selection: { class: "bg-transparent font-medium uppercase" },
             },
         },
         toolbar: {
@@ -229,7 +230,7 @@ export const CONFIG: AppConfig = {
         fileDropZone: {
             root: {
                 class:
-                    "mt-2 mb-8 border-dotted border-2 inline-block p-8 text-center nm-flat-gray-200-lg",
+                    "mt-2 mb-8 border-dotted border-2 inline-block p-8 text-center font-medium nm-flat-gray-200-lg",
             },
         },
         code: {

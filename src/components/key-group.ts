@@ -47,7 +47,7 @@ export const keyGroup = (ctx: AppContext) => {
                 viewConfig.showMinor
                     ? [
                           "div",
-                          ["span.red", " ・ "],
+                          ["span.text-red-600", " ・ "],
                           x.minorKey,
                           viewConfig.showSmall ? ["small", " min"] : [],
                       ]

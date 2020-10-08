@@ -9,7 +9,7 @@ import type { AppContext } from "../api";
 
 const h2 = title({
     element: "h2",
-    attribs: { class: "text-2xl font-extrabold mb-2" },
+    attribs: { class: "text-2xl font-extrabold mb-4" },
 });
 
 export const home = (ctx: AppContext) => {

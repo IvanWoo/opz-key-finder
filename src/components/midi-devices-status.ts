@@ -62,13 +62,7 @@ export const midiDevicesStatus = (ctx: AppContext) => {
         let midiDevices = views.midiDevices.deref()!;
         return [
             "div",
-            [
-                "span",
-                ui.content[Number(enabledMidi)],
-                enabledMidi
-                    ? "Web MIDI is available"
-                    : "Web MIDI is unavailable",
-            ],
+            ["span", ui.content[Number(enabledMidi)], ""],
             [
                 "span",
                 ui.dropdown.root,
@@ -91,7 +85,7 @@ export const midiDevicesStatus = (ctx: AppContext) => {
                               ["All Devices", ...midiDevices]
                           ),
                       ]
-                    : [],
+                    : "Web MIDI unavailable",
             ],
         ];
     };
