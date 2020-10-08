@@ -185,20 +185,74 @@ export const CONFIG: AppConfig = {
     },
 
     ui: {
-        root: { class: "cf flex-ns sans-serif ma0" },
+        root: { class: "clearfix flex flex-row font-sans m-0" },
+        midiDevicesStatus: {
+            content: [
+                { class: "gray-500 p-1 bg-red-200 rounded-full" },
+                { class: "gray-500 p-1 bg-green-200 rounded-full" },
+            ],
+            dropdown: {
+                root: {
+                    class:
+                        "ml-2 rounded-full nm-flat-gray-200 p-2 font-medium uppercase",
+                },
+                selection: { class: "bg-transparent font-medium uppercase" },
+            },
+        },
         toolbar: {
-            button: { class: "mr3 pv2 ph2 bg-black white f4" },
+            root: { class: "my-4" },
+            button: {
+                class:
+                    "cursor-pointer mr-3 px-8 py-2 text-md font-medium nm-flat-gray-200 hover:nm-flat-gray-200-lg active:nm-inset-gray-200-sm rounded-full uppercase transition duration-200 ease-in-out transform",
+            },
+        },
+        toggleGroup: {
+            root: { class: "" },
+            key: {
+                major: {
+                    class:
+                        "inline-block cursor-pointer nm-flat-gray-200 hover:nm-flat-gray-200-lg active:nm-inset-gray-200-lg rounded-full",
+                },
+                e: {
+                    class:
+                        "inline-block cursor-pointer nm-flat-gray-200 hover:nm-flat-gray-200-lg active:nm-inset-gray-200-lg rounded-full mr-8",
+                },
+                minor: {
+                    class:
+                        "inline-block cursor-pointer nm-flat-gray-200 hover:nm-flat-gray-200-lg active:nm-inset-gray-200-lg rounded-full mb-8",
+                },
+            },
+        },
+        keyGroup: {
+            root: { class: "inline-block" },
+            block: { class: "my-2 mr-2" },
+        },
+        fileDropZone: {
+            root: {
+                class:
+                    "mt-2 mb-8 border-dotted border-2 inline-block p-8 text-center font-medium nm-flat-gray-200-lg",
+            },
         },
         code: {
-            class: "ma0 ml4 pa2 f7 bg-light-gray code overflow-x-hidden",
+            class:
+                "m-0 ml-8 p-2 text-xs bg-gray-100 font-mono overflow-x-hidden",
         },
         column: {
-            content: [{ class: "fl w-90-ns ma2" }, { class: "fl w-50-ns ma2" }],
+            content: [
+                { class: "float-left w-full m-4" },
+                { class: "float-left w-5/6 m-4" },
+            ],
             debug: [
-                { class: "fl w-10-ns ma2 close" },
-                { class: "fl w-50-ns ma2 open" },
+                { class: "float-right m-4 close" },
+                { class: "float-right m-4 open" },
             ],
         },
-        debugToggle: { class: "toggle pointer" },
+        debugToggle: { class: "toggle cursor-pointer tracking-wider" },
+        viewConfigToggleGroup: {
+            block: {
+                class: "cursor-pointer my-2 flex justify-start items-center",
+            },
+            caption: { class: "ml-2" },
+        },
     },
 };

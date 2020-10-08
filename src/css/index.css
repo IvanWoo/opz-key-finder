@@ -1,6 +1,6 @@
-.dragover {
-    background-color: #efefef;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 #debug {
     position: relative;
@@ -13,7 +13,7 @@ a.toggle {
     padding: 0.25rem 0.5rem;
     position: absolute;
     top: 3rem;
-    background: #eee;
+    background: #f7fafc;
     color: black;
     text-align: right;
     text-decoration: none;

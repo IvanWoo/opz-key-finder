@@ -13,20 +13,21 @@ const toggleSq = slideToggleRect({ ...rectOpts, vertical: false });
 
 export const viewConfigToggleGroup = (ctx: AppContext) => {
     const views = ctx.views;
+    const ui = ctx.ui.viewConfigToggleGroup;
     const config = views.viewConfig.deref()!;
     return [
         "div",
         Object.entries(config).map(([k, v]) => [
-            "div.mv2",
+            "div",
+            ui.block,
             [
                 toggleSq,
                 {
-                    class: "pointer mr2",
                     onclick: () => ctx.bus.dispatch([TOGGLE_VIEW_CONFIG, k]),
                 },
                 v,
             ],
-            k,
+            ["span", ui.caption, k],
         ]),
     ];
 };

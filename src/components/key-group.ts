@@ -4,6 +4,7 @@ import { getComparisons } from "../utils";
 
 export const keyGroup = (ctx: AppContext) => {
     const views = ctx.views;
+    const ui = ctx.ui;
     const size = views.size.deref()!;
     const width = Math.min(400 * 1.1, size[0] * 0.9);
 
@@ -19,17 +20,21 @@ export const keyGroup = (ctx: AppContext) => {
     };
 
     return [
-        "div.dib",
+        "div",
+        ui.keyGroup.root,
         ...comparisons.map((x, i) => [
-            "div.mv2.mr2",
+            "div",
             {
-                onmouseover: (e) => {
-                    e.preventDefault();
-                    ctx.bus.dispatch([SET_HIGHLIGHTS, x.normalizedMidis]);
-                },
-                onmouseleave: (e) => {
-                    e.preventDefault();
-                    ctx.bus.dispatch([RESET_HIGHLIGHTS]);
+                ...ui.keyGroup.block,
+                ...{
+                    onmouseover: (e) => {
+                        e.preventDefault();
+                        ctx.bus.dispatch([SET_HIGHLIGHTS, x.normalizedMidis]);
+                    },
+                    onmouseleave: (e) => {
+                        e.preventDefault();
+                        ctx.bus.dispatch([RESET_HIGHLIGHTS]);
+                    },
                 },
             },
             [
@@ -42,7 +47,7 @@ export const keyGroup = (ctx: AppContext) => {
                 viewConfig.showMinor
                     ? [
                           "div",
-                          ["span.red", " ・ "],
+                          ["span.text-red-600", " ・ "],
                           x.minorKey,
                           viewConfig.showSmall ? ["small", " min"] : [],
                       ]

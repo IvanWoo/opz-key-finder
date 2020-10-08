@@ -78,7 +78,7 @@ export const clickToggleDot = (opts: Partial<ToggleDotOpts> = {}) => {
         y: "50%",
         "text-anchor": "middle",
         "alignment-baseline": "central",
-        font: "bold sans-serif",
+        font: "bold font-sans",
         "font-size": totalH * ratio,
         style,
     };

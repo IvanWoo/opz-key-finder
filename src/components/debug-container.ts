@@ -17,7 +17,7 @@ export function debugContainer(ctx: AppContext, debug: any, json: string) {
             eventLink,
             [TOGGLE_DEBUG],
             ctx.ui.debugToggle,
-            debug ? "close \u25bc" : "open \u25b2",
+            debug ? "close▼" : "open▲",
         ],
         ["pre", ctx.ui.code, json],
     ];

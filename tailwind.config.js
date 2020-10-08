@@ -1,7 +1,11 @@
 module.exports = {
-    theme: {
-        extend: {}
+    future: {
+        removeDeprecatedGapUtilities: true,
+        purgeLayersByDefault: true,
     },
-    variants: {},
-    plugins: []
+    theme: {
+        extend: {},
+    },
+    variants: { neumorphismInset: ["responsive", "hover", "focus", "active"] },
+    plugins: [require("tailwindcss-neumorphism")],
 };

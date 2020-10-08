@@ -25,6 +25,7 @@
         "@tonaljs/modules": "^3.4.5",
         "@tonejs/midi": "^2.0.20",
         "meyda": "^4.3.1",
+        "tailwindcss-neumorphism": "^0.1.0",
         "webmidi": "^2.5.1"
     },
     "devDependencies": {

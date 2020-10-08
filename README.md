@@ -11,6 +11,7 @@ Provide key reference while jamming.
 Features:
 
 - OP-Z inspired click component
+- Neumorphic style UI
 - Interactive with MIDI inputs via Web MIDI API
 - Drag and drop MIDI files
 - Drag and drop Audio files including mp3, wav and aac

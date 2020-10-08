@@ -3966,6 +3966,11 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
+loadash@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/loadash/-/loadash-1.0.0.tgz#b92e54d809f3c225f4f9a9cfbaeae5b56de1ca9f"
+  integrity sha512-xlX5HBsXB3KG0FJbJJG/3kYWCfsCyCSus3T+uHVu6QL6YxAdggmm3QeyLgn54N2yi5/UE6xxL5ZWJAAiHzHYEg==
+
 locate-path@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/locate-path/-/locate-path-3.0.0.tgz#dbec3b3ab759758071b58fe59fc41871af21400e"
@@ -6059,10 +6064,47 @@ symbol-tree@^3.2.2:
   resolved "https://registry.yarnpkg.com/symbol-tree/-/symbol-tree-3.2.4.tgz#430637d248ba77e078883951fb9aa0eed7c63fa2"
   integrity sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==
 
+tailwindcss-neumorphism@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/tailwindcss-neumorphism/-/tailwindcss-neumorphism-0.1.0.tgz#9687236de699fd043bb583693143d73893bb186d"
+  integrity sha512-6dTqnTVGcTBHNq4MJLqabRHcbDp8JNwImGcd+a7tqPGYJBckhl+bbr8nXJtogS63HqnDKTk59MljaYLrhFr6YQ==
+  dependencies:
+    color "^3.1.2"
+    loadash "^1.0.0"
+    tailwindcss "^1.4.6"
+
 tailwindcss@^1.0:
   version "1.8.10"
   resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-1.8.10.tgz#945ef151c401c04a1c95e6a6bc747387a8d1b9dc"
   integrity sha512-7QkERG/cWCzsuMqHMwjOaLMVixOGLNBiXsrkssxlE1aWfkxVbGqiuMokR2162xRyaH2mBIHKxmlf1qb3DvIPqw==
+  dependencies:
+    "@fullhuman/postcss-purgecss" "^2.1.2"
+    autoprefixer "^9.4.5"
+    browserslist "^4.12.0"
+    bytes "^3.0.0"
+    chalk "^3.0.0 || ^4.0.0"
+    color "^3.1.2"
+    detective "^5.2.0"
+    fs-extra "^8.0.0"
+    html-tags "^3.1.0"
+    lodash "^4.17.20"
+    node-emoji "^1.8.1"
+    normalize.css "^8.0.1"
+    object-hash "^2.0.3"
+    postcss "^7.0.11"
+    postcss-functions "^3.0.0"
+    postcss-js "^2.0.0"
+    postcss-nested "^4.1.1"
+    postcss-selector-parser "^6.0.0"
+    postcss-value-parser "^4.1.0"
+    pretty-hrtime "^1.0.3"
+    reduce-css-calc "^2.1.6"
+    resolve "^1.14.2"
+
+tailwindcss@^1.4.6:
+  version "1.8.11"
+  resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-1.8.11.tgz#c8be430fe5d1685a20acc3409b7ffb9288e8b1b6"
+  integrity sha512-k7Mam6s+rmr79z0eil56tdGH7cvTlzWfijlO5qDLlpybDqPwzYRGQ/1CksE/H192oeAem1bFy9IDJL97q7lSag==
   dependencies:
     "@fullhuman/postcss-purgecss" "^2.1.2"
     autoprefixer "^9.4.5"

@@ -9,7 +9,7 @@ export const toolbar = (ctx: AppContext) => {
             e.preventDefault();
             ctx.bus.dispatch([RESET_KEY_STATE]);
         },
-        "Clear",
+        "CLEAR",
         ui.toolbar.button
     );
     const btRandom = button(
@@ -17,8 +17,8 @@ export const toolbar = (ctx: AppContext) => {
             e.preventDefault();
             ctx.bus.dispatch([SET_RANDOM_KEY_STATE]);
         },
-        "Random",
+        "RANDOM",
         ui.toolbar.button
     );
-    return () => ["div.mv4", [btClear], [btRandom]];
+    return () => ["div", ui.toolbar.root, [btClear], [btRandom]];
 };

@@ -48,27 +48,31 @@ const onDrop = (bus: EventBus, e) => {
 export const fileDropZone = (ctx: AppContext) => {
     const bus = ctx.bus;
     const views = ctx.views;
+    const ui = ctx.ui.fileDropZone;
     const midiFile = views.midiFile.deref()!;
     const size = views.size.deref()!;
     const bWidth = Math.min(400 * 1.1, size[0] * 0.9);
     return [
-        "div.mt2.mb4.ba.b--dotted.bw1.dib.pa4.v-mid.tc",
+        "div",
         {
-            ondrop: (e) => {
-                e.target.classList.remove("dragover");
-                onDrop(bus, e);
-            },
-            ondragenter: (e) => {
-                e.target.classList.add("dragover");
-                stopE(e);
-            },
-            ondragleave: (e) => {
-                e.target.classList.remove("dragover");
-                stopE(e);
-            },
-            ondragover: (e) => stopE(e),
-            style: {
-                width: `${bWidth}px`,
+            ...ui.root,
+            ...{
+                ondrop: (e) => {
+                    e.target.classList.remove("nm-inset-gray-200-sm");
+                    onDrop(bus, e);
+                },
+                ondragenter: (e) => {
+                    e.target.classList.add("nm-inset-gray-200-sm");
+                    stopE(e);
+                },
+                ondragleave: (e) => {
+                    e.target.classList.remove("nm-inset-gray-200-sm");
+                    stopE(e);
+                },
+                ondragover: (e) => stopE(e),
+                style: {
+                    width: `${bWidth}px`,
+                },
             },
         },
         midiFile,
