@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.dragover {
-    background-color: #efefef;
-}
-
 #debug {
     position: relative;
 }

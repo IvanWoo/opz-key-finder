@@ -202,7 +202,7 @@ export const CONFIG: AppConfig = {
             root: { class: "my-4" },
             button: {
                 class:
-                    "cursor-pointer mr-3 px-8 py-2 text-md font-medium nm-flat-gray-200 hover:nm-flat-gray-200-lg rounded-full uppercase transition duration-200 ease-in-out transform",
+                    "cursor-pointer mr-3 px-8 py-2 text-md font-medium nm-flat-gray-200 hover:nm-flat-gray-200-lg active:nm-inset-gray-200-sm rounded-full uppercase transition duration-200 ease-in-out transform",
             },
         },
         toggleGroup: {
@@ -210,15 +210,15 @@ export const CONFIG: AppConfig = {
             key: {
                 major: {
                     class:
-                        "inline-block cursor-pointer nm-flat-gray-200 hover:nm-flat-gray-200-lg rounded-full",
+                        "inline-block cursor-pointer nm-flat-gray-200 hover:nm-flat-gray-200-lg active:nm-inset-gray-200-lg rounded-full",
                 },
                 e: {
                     class:
-                        "inline-block cursor-pointer nm-flat-gray-200 hover:nm-flat-gray-200-lg rounded-full mr-8",
+                        "inline-block cursor-pointer nm-flat-gray-200 hover:nm-flat-gray-200-lg active:nm-inset-gray-200-lg rounded-full mr-8",
                 },
                 minor: {
                     class:
-                        "inline-block cursor-pointer nm-flat-gray-200 hover:nm-flat-gray-200-lg rounded-full mb-8",
+                        "inline-block cursor-pointer nm-flat-gray-200 hover:nm-flat-gray-200-lg active:nm-inset-gray-200-lg rounded-full mb-8",
                 },
             },
         },

@@ -43,7 +43,7 @@ export const toggleGroup = (ctx: AppContext) => {
     };
     const highlights = views.highlights.deref()!;
     return [
-        "div.mb4",
+        "div.mb-4",
         ...views.keyState.deref()!.map((x, i) => [
             "div",
             getClass(i, ui.toggleGroup.key),

@@ -6,6 +6,6 @@ module.exports = {
     theme: {
         extend: {},
     },
-    variants: {},
+    variants: { neumorphismInset: ["responsive", "hover", "focus", "active"] },
     plugins: [require("tailwindcss-neumorphism")],
 };

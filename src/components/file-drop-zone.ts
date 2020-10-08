@@ -48,25 +48,25 @@ const onDrop = (bus: EventBus, e) => {
 export const fileDropZone = (ctx: AppContext) => {
     const bus = ctx.bus;
     const views = ctx.views;
-    const ui = ctx.ui;
+    const ui = ctx.ui.fileDropZone;
     const midiFile = views.midiFile.deref()!;
     const size = views.size.deref()!;
     const bWidth = Math.min(400 * 1.1, size[0] * 0.9);
     return [
         "div",
         {
-            ...ui.fileDropZone.root,
+            ...ui.root,
             ...{
                 ondrop: (e) => {
-                    e.target.classList.remove("dragover");
+                    e.target.classList.remove("nm-inset-gray-200-sm");
                     onDrop(bus, e);
                 },
                 ondragenter: (e) => {
-                    e.target.classList.add("dragover");
+                    e.target.classList.add("nm-inset-gray-200-sm");
                     stopE(e);
                 },
                 ondragleave: (e) => {
-                    e.target.classList.remove("dragover");
+                    e.target.classList.remove("nm-inset-gray-200-sm");
                     stopE(e);
                 },
                 ondragover: (e) => stopE(e),
