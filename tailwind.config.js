@@ -3,9 +3,10 @@ module.exports = {
         removeDeprecatedGapUtilities: true,
         purgeLayersByDefault: true,
     },
+    purge: ["./src/*.ts", "./src/**/*.ts", "./index.html"],
     theme: {
         extend: {},
     },
-    variants: { neumorphismInset: ["responsive", "hover", "focus", "active"] },
+    variants: { neumorphismInset: ["active"] },
     plugins: [require("tailwindcss-neumorphism")],
 };
