@@ -128,7 +128,8 @@ const createAudioContext = () => {
         return new AudioContext();
     } catch {
         // Safari
-        // return new window.webkitAudioContext();
+        // @ts-ignore
+        return new window.webkitAudioContext();
     }
 };
 
