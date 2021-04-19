@@ -1,4 +1,4 @@
-import { AppContext, Comparison } from "../api";
+import type { AppContext } from "../api";
 import { SET_HIGHLIGHTS, RESET_HIGHLIGHTS } from "../events";
 import { getComparisons } from "../utils";
 
@@ -22,16 +22,16 @@ export const keyGroup = (ctx: AppContext) => {
     return [
         "div",
         ui.keyGroup.root,
-        ...comparisons.map((x, i) => [
+        ...comparisons.map((x, _) => [
             "div",
             {
                 ...ui.keyGroup.block,
                 ...{
-                    onmouseover: (e) => {
+                    onmouseover: e => {
                         e.preventDefault();
                         ctx.bus.dispatch([SET_HIGHLIGHTS, x.normalizedMidis]);
                     },
-                    onmouseleave: (e) => {
+                    onmouseleave: e => {
                         e.preventDefault();
                         ctx.bus.dispatch([RESET_HIGHLIGHTS]);
                     },

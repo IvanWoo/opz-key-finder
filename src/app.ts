@@ -10,7 +10,8 @@ import * as ev from "./events";
 import type { IObjectOf } from "@thi.ng/api";
 import type { AppConfig, AppContext, AppViews, ViewSpec } from "./api";
 
-const ENV = process.env.ENV;
+// https://www.snowpack.dev/reference/environment-variables#option-3%3A-plugin
+const ENV = import.meta.env.MODE;
 
 /**
  * Generic base app skeleton. You can use this as basis for your own
@@ -43,7 +44,7 @@ export class App {
         this.router = new HTMLRouter(config.router);
         // connect router to event bus so that routing events are processed
         // as part of the normal batched event processing loop
-        this.router.addListener(EVENT_ROUTE_CHANGED, (e) =>
+        this.router.addListener(EVENT_ROUTE_CHANGED, e =>
             this.ctx.bus.dispatch([EVENT_ROUTE_CHANGED, e.value])
         );
         // whenever the route has changed, record its details in the app
@@ -61,7 +62,7 @@ export class App {
         );
 
         // instrument all event handlers to trace events in console
-        if (ENV && ENV === "debug") {
+        if (ENV && ENV === "development") {
             this.ctx.bus.instrumentWith([trace]);
         }
 
@@ -69,7 +70,7 @@ export class App {
             route: "route",
             routeComponent: [
                 "route.id",
-                (id) =>
+                id =>
                     (
                         this.config.components[id] ||
                         (() => ["div", `missing component for route: ${id}`])
@@ -129,7 +130,7 @@ export class App {
         return [
             "div",
             ui.root,
-            ENV && ENV === "debug"
+            ENV && ENV === "development"
                 ? [
                       [
                           "div",

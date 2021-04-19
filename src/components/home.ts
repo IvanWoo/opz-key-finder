@@ -12,7 +12,7 @@ const h2 = title({
     attribs: { class: "text-2xl font-extrabold mb-4" },
 });
 
-export const home = (ctx: AppContext) => {
+export const home = (_: AppContext) => {
     return () => [
         "div",
         [h2, "OP-Z KEY FINDER"],

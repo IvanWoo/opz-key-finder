@@ -1,4 +1,4 @@
-import { Route } from "@thi.ng/router";
+import type { Route } from "@thi.ng/router";
 
 export const HOME: Route = {
     id: "home",

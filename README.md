@@ -18,12 +18,6 @@ Features:
 
 ## Building
 
-set local env to debug
-
-```sh
-echo -en "ENV=debug" > .env
-```
-
 ```sh
 yarn install
 yarn start

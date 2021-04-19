@@ -1,4 +1,4 @@
-import { AppContext } from "../api";
+import type { AppContext } from "../api";
 import { clickToggleDot, ToggleDotOpts } from "./click-toggle";
 import { TOGGLE_KEY_STATE } from "../events";
 
@@ -54,7 +54,7 @@ export const toggleGroup = (ctx: AppContext) => {
                     ? clickToggleDot({ ...wDotOpts, ...opts })
                     : clickToggleDot({ ...bDotOpts, ...opts }),
                 {
-                    onclick: (e) => {
+                    onclick: e => {
                         e.preventDefault();
                         ctx.bus.dispatch([TOGGLE_KEY_STATE, i]);
                     },

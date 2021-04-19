@@ -1,10 +1,28 @@
 {
-    "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "outDir": ".",
-        "module": "es6",
-        "target": "es6",
-        "sourceMap": true
+        "module": "ES2020",
+        "target": "ES2017",
+        "declaration": true,
+        "declarationMap": true,
+        "experimentalDecorators": true,
+        "importHelpers": true,
+        "noUnusedParameters": true,
+        "noUnusedLocals": true,
+        "importsNotUsedAsValues": "error",
+        "preserveConstEnums": true,
+        "moduleResolution": "node",
+        "strict": true,
+        "strictNullChecks": true,
+        "noImplicitAny": false,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "lib": [
+            "esnext",
+            "dom"
+        ],
     },
-    "include": ["./src/**/*.ts"]
+    "exclude": [
+        "./**/node_modules"
+    ],
 }

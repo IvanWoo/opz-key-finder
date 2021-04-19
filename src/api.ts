@@ -1,4 +1,4 @@
-import { EffectDef, EventBus, EventDef } from "@thi.ng/interceptors";
+import type { EffectDef, EventBus, EventDef } from "@thi.ng/interceptors";
 import type { Fn, IObjectOf, Path } from "@thi.ng/api";
 import type { IView } from "@thi.ng/atom";
 import type { HTMLRouterConfig, RouteMatch } from "@thi.ng/router";
@@ -36,6 +36,7 @@ export interface AppConfig {
  * Derived views exposed by the app.
  * Add more declarations here as needed.
  */
+// @ts-ignore
 export interface AppViews extends Record<keyof AppViews, IView<any>> {
     route: IView<RouteMatch>;
     routeComponent: IView<any>;

@@ -1,6 +1,5 @@
 import {
     EV_SET_VALUE,
-    EV_UPDATE_VALUE,
     EV_TOGGLE_VALUE,
     Event,
     FX_DELAY,
@@ -9,9 +8,8 @@ import {
     valueUpdater,
 } from "@thi.ng/interceptors";
 import { take, choices } from "@thi.ng/transducers";
-import { AppConfig } from "./api";
+import type { AppConfig } from "./api";
 import { home } from "./components/home";
-import * as fx from "./effects";
 import * as ev from "./events";
 import * as routes from "./routes";
 import { defaultKeyState } from "./utils";

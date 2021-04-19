@@ -1,6 +1,5 @@
-out
+build
 /.tmp
-.cache
 
 # dotenv environment variables file
 .env

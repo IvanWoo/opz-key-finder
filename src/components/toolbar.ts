@@ -1,4 +1,4 @@
-import { AppContext } from "../api";
+import type { AppContext } from "../api";
 import { button } from "./button";
 import { RESET_KEY_STATE, SET_RANDOM_KEY_STATE } from "../events";
 

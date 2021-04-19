@@ -51,7 +51,6 @@ export const clickToggleDot = (opts: Partial<ToggleDotOpts> = {}) => {
     const svgSize = { width: totalH, height: totalH * floor };
     const style = { transition: `all ${_opts.anim}ms ease-out` };
     const center = { cx, cy: cx };
-    const filter = "url(#blur)";
 
     const hlOn: any = {
         ..._opts.hlOn,
