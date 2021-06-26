@@ -60,7 +60,7 @@ export const scales: Scale[] = transduce(
     majorKeys
 );
 
-export const getComparisons = keyState => {
+export const getComparisons = (keyState: boolean[]) => {
     const inputMidis: Midis = transduce(
         comp(
             // @ts-ignore
