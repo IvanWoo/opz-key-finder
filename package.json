@@ -10,7 +10,7 @@
         "build": "tsc && vite build",
         "preview": "vite preview",
         "lint": "prettier --write src/**/*.ts",
-        "doc": "npx madge --extensions ts --dot ./src/ > ./doc/overview.gv"
+        "doc": "madge --extensions ts --dot ./src/ > ./doc/overview.gv"
     },
     "dependencies": {
         "@thi.ng/api": "^7.1.5",
@@ -33,6 +33,7 @@
         "concurrently": "^6.2.0",
         "cross-env": "^7.0.2",
         "cssnano": "^5.0.6",
+        "madge": "^5.0.1",
         "postcss": "^8.3.5",
         "postcss-cli": "^8.0.0",
         "postcss-import": "^14.0.2",
