@@ -10,7 +10,6 @@ import * as ev from "./events";
 import type { IObjectOf } from "@thi.ng/api";
 import type { AppConfig, AppContext, AppViews, ViewSpec } from "./api";
 
-// https://www.snowpack.dev/reference/environment-variables#option-3%3A-plugin
 const ENV = import.meta.env.MODE;
 
 /**

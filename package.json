@@ -6,9 +6,9 @@
     "author": "Yifan Wu",
     "license": "MIT",
     "scripts": {
-        "clean": "rimraf .cache build",
-        "build": "snowpack build",
-        "start": "snowpack dev --reload",
+        "start": "vite",
+        "build": "tsc && vite build",
+        "preview": "vite preview",
         "lint": "prettier --write src/**/*.ts",
         "doc": "npx madge --extensions ts --dot ./src/ > ./doc/overview.gv"
     },
@@ -24,15 +24,11 @@
         "@thi.ng/transducers": "^7.7.3",
         "@tonaljs/modules": "^4.6.0",
         "@tonejs/midi": "^2.0.20",
-        "meyda": "^5.2.0",
+        "meyda": "^5.3.0",
         "webmidi": "^2.5.1"
     },
     "devDependencies": {
-        "@snowpack/plugin-dotenv": "^2.1.0",
-        "@snowpack/plugin-postcss": "^1.4.2",
-        "@snowpack/plugin-typescript": "^1.2.1",
         "@types/node": "^15.12.4",
-        "@types/snowpack-env": "^2.3.3",
         "autoprefixer": "^10.2.6",
         "concurrently": "^6.2.0",
         "cross-env": "^7.0.2",
@@ -41,12 +37,11 @@
         "postcss-cli": "^8.0.0",
         "postcss-import": "^14.0.2",
         "prettier": "^2.3.1",
-        "rimraf": "^3.0.2",
-        "snowpack": "^3.6.2",
-        "tailwindcss": "^2.2.4",
+        "tailwindcss": "^3.0.0",
         "tailwindcss-neumorphism": "^0.1.0",
         "terser": "^5.7.0",
-        "typescript": "^4.3.4"
+        "typescript": "^4.5.2",
+        "vite": "^2.6.14"
     },
     "browserslist": [
         "last 3 Chrome versions"

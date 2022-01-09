@@ -1,28 +1,24 @@
 {
     "compilerOptions": {
-        "module": "ES2020",
-        "target": "ES2017",
-        "declaration": true,
-        "declarationMap": true,
-        "experimentalDecorators": true,
-        "importHelpers": true,
-        "noUnusedParameters": true,
-        "noUnusedLocals": true,
-        "importsNotUsedAsValues": "error",
-        "preserveConstEnums": true,
-        "moduleResolution": "node",
+        "target": "ESNext",
+        "useDefineForClassFields": true,
+        "module": "ESNext",
+        "lib": [
+            "ESNext",
+            "DOM"
+        ],
+        "moduleResolution": "Node",
         "strict": true,
-        "strictNullChecks": true,
-        "noImplicitAny": false,
+        "sourceMap": true,
         "resolveJsonModule": true,
         "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "lib": [
-            "esnext",
-            "dom"
-        ],
+        "noEmit": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitAny": false,
+        "noImplicitReturns": true,
     },
-    "exclude": [
-        "./**/node_modules"
+    "include": [
+        "./src"
     ],
 }

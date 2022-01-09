@@ -1,4 +1,6 @@
-build
+dist
+dist-ssr
+*.local
 /.tmp
 
 # dotenv environment variables file
@@ -20,9 +22,3 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
-
-# build output
-*.d.ts
-*.d.ts.map
-!types.d.ts
-.nyc_output

@@ -30,7 +30,7 @@ jobs:
         run: |
           rm -rf host-repo/key-finder
           mkdir host-repo/key-finder
-          cp -a build/. host-repo/key-finder
+          cp -a dist/. host-repo/key-finder
 
       - name: Commit Changes and Push
         run: |
