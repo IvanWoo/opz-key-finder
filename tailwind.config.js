@@ -4,5 +4,5 @@ module.exports = {
         extend: {},
     },
     variants: { neumorphismInset: ["active"] },
-    plugins: [require("tailwindcss-neumorphism")],
+    plugins: [require("tw-neumorphism")],
 };
